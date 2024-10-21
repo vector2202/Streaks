@@ -9,5 +9,5 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
     path('create/', views.create_habit, name='create_habit'),
     path('view/', views.view_habits, name='view_habits'),
-    path('progress/', views.progress_view, name='progress'),
+    #path('progress/', views.progress_view, name='progress'),
 ]

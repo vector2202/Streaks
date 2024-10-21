@@ -3,15 +3,15 @@ from .models import Category, Habit
 
 class HabitForm (forms.ModelForm):
     category = forms.ModelChoiceField(
-        queryset=Category.objects.alll(),
+        queryset=Category.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'}),
         empty_label='Seleccione una categoria'
     )
     class Meta:
         model = Habit
-        fields =['nombre', 'frequencia', 'categoria', 'objetivc']
+        fields =['name', 'frequency', 'category', 'goal']
         widgets = {
-            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
-            'frecuencia': forms.Select(attrs={'class': 'form-control'}),
-            'objetivo': forms.NumberInput(attrs={'class': 'form-control', 'min': 1})
+            'name': forms.TextInput(attrs={'class': 'form-control'}),
+            'frequency': forms.Select(attrs={'class': 'form-control'}),
+            'goal': forms.NumberInput(attrs={'class': 'form-control', 'min': 1})
         }
