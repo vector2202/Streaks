@@ -22,6 +22,8 @@ def user_register(request):
     
     return render(request, 'register.html', {'form': form})
 
+
+
 @login_required
 def home(request):
     today = datetime.today().date()
