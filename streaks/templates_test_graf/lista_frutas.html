@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-center">Frutas Disponibles</h2>
+
+    <div class="row">
+        {% for fruta in frutas %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ fruta.nombre }}</h5>
+                    <p class="card-text">Precio: ${{ fruta.precio }}</p>
+                    <p class="card-text">Stock disponible: {{ fruta.stock }}</p>
+                    <a href="{% url 'comprar_fruta' fruta.id %}" class="btn btn-primary">Comprar</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay frutas disponibles en este momento.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

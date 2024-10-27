@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{% include 'navbar.html' %}
+<div class="container mt-5">
+    <h2 class="text-center">Estadísticas de Frutas Más Compradas</h2>
+
+    <!-- Formulario para filtrar por fecha y categoría -->
+    <form method="GET" class="row mb-4">
+        <div class="col-md-4">
+            <label for="fecha_inicio">Fecha Inicio:</label>
+            <input type="date" name="fecha_inicio" class="form-control" id="fecha_inicio">
+        </div>
+        <div class="col-md-4">
+            <label for="fecha_fin">Fecha Fin:</label>
+            <input type="date" name="fecha_fin" class="form-control" id="fecha_fin">
+        </div>
+        <div class="col-md-4">
+            <label for="categorias">Categorías:</label>
+            <select name="categorias" class="form-control" id="categorias" multiple>
+                <!-- Mostrar dinámicamente las categorías -->
+                {% for categoria in todas_categorias %}
+                <option value="{{ categoria.id }}">{{ categoria.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-12 mt-3">
+            <button type="submit" class="btn btn-primary">Filtrar</button>
+        </div>
+    </form>
+    
+
+    <!-- Contenedor del gráfico -->
+    <canvas id="graficoFrutasCompradas" width="400" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const frutasCompradas = {{ frutas_compradas|safe }};
+
+    const nombresFrutas = frutasCompradas.map(f => f.fruta__nombre);
+    const cantidadesFrutas = frutasCompradas.map(f => f.total_compradas);
+    const porcentajesFrutas = frutasCompradas.map(f => f.porcentaje);
+
+    const ctx = document.getElementById('graficoFrutasCompradas').getContext('2d');
+    const graficoFrutas = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: nombresFrutas,
+            datasets: [{
+                label: 'Frutas Más Compradas',
+                data: cantidadesFrutas,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const index = tooltipItem.dataIndex;
+                            return `${nombresFrutas[index]}: ${porcentajesFrutas[index].toFixed(2)}% del total`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+
+{% endblock %}

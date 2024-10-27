@@ -1,0 +1,104 @@
+<!-- Incluye Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var notificacionesDropdown = document.getElementById('notificacionesDropdown');
+        if (notificacionesDropdown) {
+            notificacionesDropdown.addEventListener('show.bs.dropdown', function () {
+                // Realizar la solicitud AJAX para marcar las notificaciones como leídas
+                fetch("{% url 'marcar_notificaciones_leidas' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',  // Incluir el CSRF token si es necesario
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Error en la respuesta del servidor');
+                    }
+                    return response.json();  // Esperar la respuesta como JSON
+                })
+                .then(data => {
+                    if (data.status === 'ok') {
+                        console.log('Notificaciones marcadas como leídas.');
+                    } else {
+                        console.error('Error en la respuesta:', data.message);
+                    }
+                })
+                .catch(error => console.error('Error en la solicitud AJAX:', error));
+            });
+        }
+    });
+    
+    </script>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-banner">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'inicio' %}">Mercadillo</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'inicio' %}">Inicio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'lista_frutas' %}">Productos</a>
+                </li>
+
+
+
+                <!-- Mostrar ícono de usuario solo si está autenticado -->
+                {% if request.user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="notificacionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Notificaciones
+                        {% if notificaciones_no_leidas > 0 %}
+                            <span class="badge bg-danger">{{ notificaciones_no_leidas }}</span>
+                        {% endif %}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificacionesDropdown">
+                        {% if notificaciones %}
+                            {% for notificacion in notificaciones %}
+                                <li><a class="dropdown-item" href="#">{{ notificacion.mensaje }}</a></li>
+                            {% endfor %}
+                        {% else %}
+                            <li><a class="dropdown-item" href="#">No tienes notificaciones</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="usuarioDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i> <!-- Ícono de usuario -->
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="usuarioDropdown">
+                        <li><a class="dropdown-item" href="{% url 'configurar_notificaciones' %}">Configuración de Notificaciones</a></li>
+                        <li><a class="dropdown-item" href="{% url 'estadisticas_frutas' %}">Estadísticas de Productos Comprados</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="nav-item">
+                            <form method="POST" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link" style="border: none; background: none;">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <!-- Mostrar "Iniciar sesión" si no está autenticado -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}">Iniciar Sesión</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'registro' %}">Regístrate</a>
+                </li>
+
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>
+
