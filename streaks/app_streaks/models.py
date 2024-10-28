@@ -27,3 +27,25 @@ class HabitCompletion(models.Model):
     date = models.DateField(auto_now_add=True)
     def __str__(self):
         return f'{self.habit.name} completado el {self.date}' 
+
+class Notificacion(models.Model):
+     ususario = models.ForeignKey(User, on_delete= models.CASCADE)
+     mensaje = models.TextField()
+     leido = models.BooleanField(default=False)
+     fecha_creacion = models.DateTimeField(auto_now_add=True)
+
+def __str__(self):
+     return f"Notifcación para {self.usuario.username}: {self.mensaje}"     
+
+class PreferenciasNotificacion(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    recibir_promociones = models.BooleanField(default=True)
+    frecuencia = models.CharField(
+        max_length = 10,
+        choices = [('diaria','Diaria'), ('semanal','Semanal'), ('mensual', 'Mensual')],
+        default = 'semanal'
+    )
+
+    def __str__(self):
+        return f"Preferencias de {self.usuario.username}"
+    

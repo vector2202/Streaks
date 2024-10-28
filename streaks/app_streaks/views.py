@@ -1,14 +1,17 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate,login
 from .forms import HabitForm
-from .models import Habit, HabitCompletion
+from .models import Habit, HabitCompletion, Notificacion, PreferenciasNotificacion
 from django.db.models import Count
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator
 from django.views import View
+import json
+from datetime import datetime
 
 def user_register(request):
     if request.method == 'POST':
@@ -138,4 +141,65 @@ def complete_habit(request, habit_id):
         messages.info(request, f"Ya has completado el hábito '{habit.nombre}' hoy.")
     
     return redirect('home')
+
+def enviar_notificaciones():
+    hoy = datetime.now()
+
+    usuarios_diarios = PreferenciasNotificacion.objects.filter(frecuencia='diaria')
+    usuarios_semanales = PreferenciasNotificacion.objects.filter(frecuencia='semanal')
+    usuarios_mensuales = PreferenciasNotificacion.objects.filter(frecuencia='mensual')
+
+    for preferencias in usuarios_diarios:
+        Notificacion.objects.create(usuario=preferencias.usuario, mensaje="¡Recordatorio diaro!")
+
+    if hoy.weekday() == 0:  # Enviar notificaciones semanales solo los lunes
+        for preferencias in usuarios_semanales:
+            Notificacion.objects.create(usuario=preferencias.usuario, mensaje="¡Recordatorio semanal!")
+
+    if hoy.day == 1:  # Enviar notificaciones mensuales solo el primer día del mes
+        for preferencias in usuarios_mensuales:
+            Notificacion.objects.create(usuario=preferencias.usuario, mensaje="¡Recordatorio mensual!")
+@login_required
+def configurar_notifiaciones(request):
+    usuario = request.user
+    try:
+        preferencias = PreferenciasNotificacion.objects.get(usuario=usuario)
+    except PreferenciasNotificacion.DoesNotExist:
+        preferencias = PreferenciasNotificacion(usuario=usuario)
+    if request.method == 'POST':
+        recibir_notificaciones = request.POST.get('recibir_notificaciones',False) == 'on'
+        frecuenica = request.POST.get('frecuencia', 'semanal')
+
+
+        preferencias.recibir_notificaciones = recibir_notificaciones
+        preferencias.frecuencia = frecuenica
+        preferencias.save()
+
+        return redirect('inicio')
+
+    # Obtener notificaciones del usuario (leídas y no leídas)
+    notificaciones = Notificacion.objects.filter(usuario=usuario).order_by('-fecha_creacion')
+
+    contexto = {
+        'preferencias': preferencias,
+        'notificaciones': notificaciones,  # Pasar todas las notificaciones
+    }
+    return render(request, 'configurar_notificaciones.html', contexto)
+
+@login_required
+def marcar_notificaciones_leidas(request):
+    if request.method == 'POST':
+        try:
+
+            usuario = request.user
+
+            # Marcar todas las notificaciones del usuario como leídas
+            Notificacion.objects.filter(usuario=usuario, leido=False).update(leido=True)
+         
+            return JsonResponse({'status': 'ok'}, status=200)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=400)
+           
 

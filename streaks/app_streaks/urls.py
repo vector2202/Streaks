@@ -10,4 +10,5 @@ urlpatterns = [
     path('create/', views.create_habit, name='create_habit'),
     path('view/', views.view_habits, name='view_habits'),
     #path('progress/', views.progress_view, name='progress'),
+    path('configurar_notificaciones/',views.configurar_notifiaciones,name='configurar_notificaciones'),
 ]
