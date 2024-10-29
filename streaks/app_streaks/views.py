@@ -32,7 +32,6 @@ def user_register(request):
 @login_required
 def home(request):
     today = datetime.today().date()
-    print(request.user)
     habits = Habit.objects.filter(user=request.user)
     completed_today = HabitCompletion.objects.filter(
         habit__in = habits,
@@ -73,6 +72,7 @@ def create_habit(request):
     if request.method == 'POST':
         name = request.POST.get("name")
         frequency = request.POST.get("frequency")
+        category = request.POST.get("category")
         goal = request.POST.get("goal")
         form = HabitForm(request.POST)
         print(form)
@@ -81,6 +81,7 @@ def create_habit(request):
                 name=name,
                 frequency=frequency,
                 user=request.user,
+                category=category,
                 goal=goal
             )
             return redirect('home')
@@ -103,7 +104,6 @@ def calculate_next_date(start_date, day):
     today_weekday = start_date.weekday()
     target_weekday = days_of_week[day]
     
-    # Si el día objetivo es hoy o ya pasó, buscar el siguiente
     if target_weekday <= today_weekday:
         next_date = start_date + timedelta(days=(7 + target_weekday - today_weekday))
     else:

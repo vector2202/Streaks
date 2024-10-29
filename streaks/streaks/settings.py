@@ -131,11 +131,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Redirigir después del inicio de sesión
 LOGIN_URL = 'login' 
-LOGIN_REDIRECT_URL = ''
-
-# Redirigir después del cierre de sesión
 LOGOUT_REDIRECT_URL = 'login'
 
+# Redirigir después del cierre de sesión
+LOGIN_REDIRECT_URL = 'home'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'  # O 'bootstrap4' según tus necesidades
 

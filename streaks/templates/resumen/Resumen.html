@@ -205,56 +205,25 @@
               </p>
 
               <div class="list-group">
+		{% for habit in pendientes %}
                 <a
                   href="#"
                   class="list-group-item list-group-item-action active"
                 >
                   <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Meditación</h5>
-                    <small class="text-body-secondary">Hace 6 días</small>
+                    <h5 class="mb-1">{{ habit.name }}</h5>
+                    <small class="text-body-secondary">Faltan {{ habit.goal}} repeticiones.</small>
                   </div>
                   <p class="mb-1">
-                    Dedica de 5 a 10 minutos al día a meditar. Te ayudará a
-                    reducir el estrés y mejorar tu enfoque.
+                    mensaje
                   </p>
                   <small class="text-body-secondary"
-                    >Necesitas un lugar tranquilo y guía de meditación</small
+                    >{{ habit.category }}</small
                   >
                 </a>
-
-                <a href="#" class="list-group-item list-group-item-action">
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Desconectar de la Tecnología</h5>
-                    <small class="text-body-secondary">Hace 4 días</small>
-                  </div>
-                  <p class="mb-1">
-                    Dedica al menos una hora al día a desconectar de las
-                    pantallas.
-                  </p>
-                  <small class="text-body-secondary"
-                    >Necesitas establecer un horario y actividades que disfrutes
-                    fuera de la tecnología.</small
-                  >
-                </a>
-
-                <a
-                  href="#"
-                  class="list-group-item list-group-item-action"
-                  aria-current="true"
-                >
-                  <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Ejercicio físico</h5>
-                    <small>Hace 2 días</small>
-                  </div>
-                  <p class="mb-1">
-                    Realiza una sesión de ejercicio físico, ya sea cardio, yoga,
-                    entrenamiento de fuerza o caminatas.
-                  </p>
-                  <small
-                    >Necesitas ropa deportiva cómoda, un espacio adecuado, y un
-                    plan de entrenamiento.</small
-                  >
-                </a>
+		{% empty %}
+		<p>No hay hábitos pendientes.</p>
+		{% endfor %}
               </div>
             </div>
           </div>
@@ -438,7 +407,6 @@
           document.getElementById(section).classList.remove("d-none"); //muestra resumen o estadisticas, la que el usuario haya seleccionado
       }
       async function handleCheckboxClick(habitId, goal) {
-	  console.log("decrementando")
 	  const checkbox = document.getElementById(`habit_${habitId}`);
 	  if (checkbox.checked) {
               try {
@@ -454,12 +422,13 @@
 		  if (response.ok) {
 		      checkbox.checked = false;
                       const result = await response.json();
+		      
                       if (result.goal <= 0) {
 			  const habitContainer = document.getElementById(`habit-container-${habitId}`);
 			  habitContainer.remove();
 			  alert(`¡Habito completado! Has alcanzado tu meta para "${habitContainer.textContent.trim()}"`);
-
                       }
+		      location.reload();
 		  } else {
                       console.error("Error en la respuesta del servidor.");
 		  }
