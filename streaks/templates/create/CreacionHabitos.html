@@ -3,14 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Resumen</title>
+    <title>Crear Habito</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'login/styles.css' %}" />
+    <link rel="stylesheet" href="{% static 'create/styles.css' %}" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -97,7 +96,8 @@
 
     <div class="container w-75">
       <h2>Crear un Nuevo Hábito</h2>
-      <form>
+      <form method="POST" action="{% url 'create_habit' %}" id="habit-form">
+	{% csrf_token %}
         <!-- Nombre del hábito -->
         <div class="mb-3">
           <label for="nombre-habito" class="form-label">Nombre</label>
@@ -105,7 +105,9 @@
             type="text"
             class="form-control"
             id="nombre-habito"
+	    name="nombre_habito"
             placeholder="Introduce el nombre de la rutina que deseas realizar"
+	    required
           />
         </div>
 
@@ -292,25 +294,25 @@
                 >
               </li>
             </ul>
+	    <input type="hidden" name="categoria" id="categoria-habit" />
           </div>
         </div>
 
         <!-- Repeticiones del hábito -->
         <div class="repeticiones mb-3">
           <label for="objetivo-habito" id="titulo-objetivo" class="form-label">
-            Número de veces que te notificaremos sobre tu hábito
+            Meta que quieres alcanzar
           </label>
-          <input type="number" class="form-control " id="objetivo-habito" min="1" step="1" placeholder="Ej: 5" />
+          <input type="number" class="form-control" name="objetivo_habito" id="objetivo-habito" min="1" step="1" placeholder="Ej: 5" required/>
         </div>
 
         <!-- Botón de Crear Hábito -->
-        <button
-          type="success" 
-          class="btn btn-success"
-          data-bs-toggle="modal"
-          data-bs-target="#submitModal" >
-          Crear Hábito
-        </button>
+	<button
+	  type="submit"  
+	  class="btn btn-success">
+	  Crear Hábito
+	</button>
+
 
         <!-- Submit Modal -->
         <div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">

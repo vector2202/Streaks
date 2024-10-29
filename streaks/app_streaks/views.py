@@ -7,11 +7,13 @@ from django.contrib.auth import authenticate,login
 from .forms import HabitForm
 from .models import Habit, HabitCompletion, Notificacion, PreferenciasNotificacion
 from django.db.models import Count
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from django.core.paginator import Paginator
 from django.views import View
 import json
 from datetime import datetime
+import logging
+logger = logging.getLogger(__name__)
 
 def user_register(request):
     if request.method == 'POST':
@@ -55,9 +57,11 @@ def home(request):
             if not completado:
                 pendings.append(habit)
     habits_completed_today = habits.filter(id__in=completed_today)
+    user_name = request.user.get_full_name() or request.user.username
     context = {
         'pendientes': pendings,
-        'completados_hoy': habits_completed_today
+        'completados_hoy': habits_completed_today,
+        'user_name': user_name
     }
     return render(request, 'resumen/Resumen.html', context)
 
@@ -65,14 +69,48 @@ def home(request):
 def create_habit(request):
     if request.method == 'POST':
         form = HabitForm(request.POST)
+        print(form)
         if form.is_valid():
             habit = form.save(commit=False)
-            habit.user = request.user
-            habit.save()
-            return redirect('view_habits')
+            selected_days = request.POST.getlist('selected_days')
+            today = datetime.now()
+            
+
+            for day in selected_days:
+                next_date = calculate_next_date(today, day)
+                habit.created_at = next_date
+                habit.save()
+            print(f"Hábito creado: {habit.name} para el {habit.created_at}. Redirigiendo a home.")
+            messages.success(request, 'Hábito creado con éxito.')
+            logger.info(f"Hábito creado: {habit.name} para el {habit.created_at}. Redirigiendo a home.")
+            return redirect('home')
     else:
         form = HabitForm()
+
     return render(request, 'create/CreacionHabitos.html', {'form': form})
+
+def calculate_next_date(start_date, day):
+    days_of_week = {
+        'lunes': 0,
+        'martes': 1,
+        'miércoles': 2,
+        'jueves': 3,
+        'viernes': 4,
+        'sábado': 5,
+        'domingo': 6,
+    }
+    
+    today_weekday = start_date.weekday()
+    target_weekday = days_of_week[day]
+    
+    # Si el día objetivo es hoy o ya pasó, buscar el siguiente
+    if target_weekday <= today_weekday:
+        next_date = start_date + timedelta(days=(7 + target_weekday - today_weekday))
+    else:
+        next_date = start_date + timedelta(days=(target_weekday - today_weekday))
+    
+    return next_date
+
 
 @login_required
 def view_habits(request):
