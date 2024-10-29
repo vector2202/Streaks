@@ -35,12 +35,15 @@
           <div class="login-title text-center mb-4">
             <p class="h4 afacad-flux">Iniciar Sesión</p>
           </div>
-          <form>
+          <form method="POST">
+	    {% csrf_token %}
             <div class="input-group mb-3">
               <input
                 type="text"
                 class="form-control username-input"
                 placeholder="Ingresa tu nombre de usuario"
+		name="username"
+		required
               />
             </div>
             <div class="input-group mb-3">
@@ -48,6 +51,8 @@
                 type="password"
                 class="form-control password-input"
                 placeholder="Ingresa tu contraseña"
+		name="password"
+		required
               />
             </div>
             <button class="btn btn-danger w-100">Ingresar</button>

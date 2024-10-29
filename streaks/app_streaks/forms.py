@@ -18,4 +18,3 @@ class HabitForm (forms.ModelForm):
             'category': forms.Select(),
             'goal': forms.NumberInput(attrs={'min': 1}),
         }
-        

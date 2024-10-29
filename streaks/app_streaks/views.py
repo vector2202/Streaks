@@ -150,7 +150,8 @@ def view_habits(request):
             'porcentaje': porcentaje,
             'tiempo_consistencia': tiempo_consistencia,
         })
-
+    #Agregar una lista de completados por dia/semana/mes
+    #[4.5.6.7.8]
     # Obtener todas las categorías para el filtro
     categorias = Category.objects.all()
 
