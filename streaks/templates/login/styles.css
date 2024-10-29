@@ -1,0 +1,79 @@
+body {
+  background-size: cover;
+}
+/* Con esto, obligamos a que bootstrap tome el fondo que le estamos pasando */
+.bg-custom {
+  background-image: url("../images/fondito3.jpg") !important;
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center center;
+}
+
+/*Fuente*/
+.afacad-flux {
+  font-family: "Afacad Flux", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.container-flex {
+  display: flex;
+  justify-content: space-between; /* Distribuye el espacio entre ambos contenedores */
+  align-items: center; /* Alinea verticalmente ambos contenedores */
+  padding: 20px;
+  height: 100vh; /* Ajusta la altura según tus necesidades */
+}
+
+/*login login-container css*/
+.login-container {
+  font-family: "Afacad Flux", sans-serif;
+  position: relative;
+  background: #ffffff;
+  opacity: 99%;
+  max-width: 260px;
+  padding: 10px 45px 30px 45px;
+  text-align: right;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+  border-radius: 15px;
+}
+.login-container p {
+  font-family: "Afacad Flux", sans-serif;
+  font-size: 15px;
+  padding: 10px;
+  text-align: center;
+}
+
+/*Inputs donde el usuario ingresará sus datos de sesión*/
+.login-container input {
+  outline: 0;
+  background: #dec8c8 !important; /* color de fondo */
+  width: 100%;
+  border: 0; /* Borde del input, se vea parejito */
+  margin: 0 0 10px;
+  padding: 10px; /*Separacion entre ambos inputs */
+  font-size: 10px;
+}
+
+/*Botón de ingresar*/
+.login-container button {
+  outline: 0;
+  border-radius: 10px; /*contorno curveadito del boton*/
+  background: #d1100d;
+  width: 100%;
+  border: 0;
+  padding: 10px; /*tamaño del boton*/
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.image-container {
+  text-align: left; /* Centra la imagen horizontalmente */
+  margin-bottom: 50px; /* Espacio entre la imagen y el contenido */
+}
+
+.intro-image {
+  max-width: 100%; /* Asegura que la imagen no se desborde */
+  height: auto; /* Mantiene la proporción de la imagen */
+}

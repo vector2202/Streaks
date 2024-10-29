@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resumen</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'login/styles.css' %}" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <!-- Barra de navegación -->
+  <body class="bg-custom">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Seguimiento de Hábitos</a>
+
+        <!-- Botones de barra de navegación para cambiar de pantalla -->
+        <div class="d-flex ms-auto">
+          <button
+            type="button"
+            class="btn btn-secondary mx-1"
+            onclick="showSection('resumen')"
+          >
+            Resumen
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary mx-1"
+            onclick="showSection('estadisticas')"
+          >
+            Estadísticas
+          </button>
+        </div>
+
+        <div class="d-flex ms-2">
+          <!-- Botón de notificaciones con circulito -->
+          <button type="button" class="btn btn-primary position-relative mx-2">
+            Notificaciones
+            <span
+              class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"
+            >
+              <span class="visually-hidden">New alerts</span>
+            </span>
+          </button>
+
+          <!-- Botón de ayuda con ícono de pregunta, al darle click, se arroja un modal -->
+          <button
+            class="btn btn-outline-light"
+            data-bs-toggle="modal"
+            data-bs-target="#helpModal"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              class="bi bi-question-circle"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"
+              />
+              <path
+                d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286m1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Modal de Ayuda, se muestra descripción sobre que contiene esta pantalla -->
+    <div
+      class="modal fade"
+      id="helpModal"
+      tabindex="-1"
+      aria-labelledby="helpModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="helpModalLabel">
+              Información sobre esta pantalla
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>
+              Aquí se muestra todo lo relacionado con el avance del usuario en
+              sus hábitos
+            </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-success"
+              data-bs-dismiss="modal"
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bienvenida y botón para crear un nuevo hábito-->
+    <h1 class="text-center mt-5">¡Bienvenido, nombredeusuariooooo!</h1>
+    <div class="mt-4 d-flex justify-content-center">
+      <form action="{% url 'create_habit' %}" method="get">  <!-- O usa "post" si tienes un formulario -->
+	<button type="submit" class="btn btn-danger" style="width: 200px">
+          Crear un nuevo Hábito
+	</button>
+      </form>
+    </div>
+
+    <!-- Por así decirlo, será nuestra pantalla principal de inicio -->
+
+    <!-- Contenedor para organizar las dos partes de forma horizontal -->
+    <div id="resumen" class="container mt-5">
+      <!-- Parte de arriba: Hábitos completados y Hábitos pendientes -->
+      <div class="row mb-4">
+        <!-- Sección de marcar hábitos completados -->
+        <div class="seleccion col-md-6 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Hábitos completados</h4>
+              <p class="card-text">Selecciona los hábitos que has completado</p>
+              <!-- Checkboxes dentro de marcar hábitos seleccionados-->
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" />
+                <label class="form-check-label">Primer hábito :</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" />
+                <label class="form-check-label">Segundo hábito :</label>
+              </div>
+
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Tercer hábito :
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Cuarto hábito :
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" />
+                <label class="form-check-label" for="flexCheckChecked">
+                  Quinto hábito :
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección de Hábitos Pendientes -->
+        <div class="habitos-pendientes col-md-6 mb-3">
+          <div class="card h-100">
+            <div class="card-body">
+              <h4 class="card-title">Hábitos Pendientes</h4>
+              <h5 class="card-title">
+                Hábitos mostrados desde el más antiguo al creado más
+                recientemente
+              </h5>
+
+              <p class="card-text">
+                Un pequeño esfuerzo más y habrás logrado otro paso hacia tus
+                objetivos.
+              </p>
+
+              <div class="list-group">
+                <a
+                  href="#"
+                  class="list-group-item list-group-item-action active"
+                >
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Meditación</h5>
+                    <small class="text-body-secondary">Hace 6 días</small>
+                  </div>
+                  <p class="mb-1">
+                    Dedica de 5 a 10 minutos al día a meditar. Te ayudará a
+                    reducir el estrés y mejorar tu enfoque.
+                  </p>
+                  <small class="text-body-secondary"
+                    >Necesitas un lugar tranquilo y guía de meditación</small
+                  >
+                </a>
+
+                <a href="#" class="list-group-item list-group-item-action">
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Desconectar de la Tecnología</h5>
+                    <small class="text-body-secondary">Hace 4 días</small>
+                  </div>
+                  <p class="mb-1">
+                    Dedica al menos una hora al día a desconectar de las
+                    pantallas.
+                  </p>
+                  <small class="text-body-secondary"
+                    >Necesitas establecer un horario y actividades que disfrutes
+                    fuera de la tecnología.</small
+                  >
+                </a>
+
+                <a
+                  href="#"
+                  class="list-group-item list-group-item-action"
+                  aria-current="true"
+                >
+                  <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Ejercicio físico</h5>
+                    <small>Hace 2 días</small>
+                  </div>
+                  <p class="mb-1">
+                    Realiza una sesión de ejercicio físico, ya sea cardio, yoga,
+                    entrenamiento de fuerza o caminatas.
+                  </p>
+                  <small
+                    >Necesitas ropa deportiva cómoda, un espacio adecuado, y un
+                    plan de entrenamiento.</small
+                  >
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Parte de abajo: Progreso diario, semanal y mensual en estilo accordion alineado en columnas -->
+    <div class="row">
+      <!-- Sección de Progreso diario -->
+      <div class="progreso-diario col-md-4 mb-3">
+        <div class="accordion accordion-flush" id="accordionFlushExample1">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseDiario"
+                aria-expanded="false"
+                aria-controls="flush-collapseDiario"
+              >
+                Progreso Diario
+              </button>
+            </h2>
+            <div
+              id="flush-collapseDiario"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionFlushExample1"
+            >
+              <div class="accordion-body">
+                Hoy has completado **** hábitos, ¡bien hecho!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Progreso Semanal -->
+      <div class="progreso-semanal col-md-4 mb-3">
+        <div class="accordion accordion-flush" id="accordionFlushExample2">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseSemanal"
+                aria-expanded="false"
+                aria-controls="flush-collapseSemanal"
+              >
+                Progreso Semanal
+              </button>
+            </h2>
+            <div
+              id="flush-collapseSemanal"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionFlushExample2"
+            >
+              <div class="accordion-body">
+                ¡Felicidades! Has terminado *** de tus hábitos esta semana.
+              </div>
+
+              <!--Accordion flush-->
+              <div class="accordion accordion-flush" id="accordionFlushExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#flush-collapseOne"
+                      aria-expanded="false"
+                      aria-controls="flush-collapseOne"
+                    >
+                      Estudiar enfocado
+                    </button>
+                  </h2>
+                  <div
+                    id="flush-collapseOne"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample"
+                  >
+                    <div class="accordion-body">Expande tu horizonte.</div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#flush-collapseTwo"
+                      aria-expanded="false"
+                      aria-controls="flush-collapseTwo"
+                    >
+                      Tomar mis pastillas a la hora adecuada
+                    </button>
+                  </h2>
+                  <div
+                    id="flush-collapseTwo"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample"
+                  >
+                    <div class="accordion-body">
+                      Cuida tu salud, es invaluable!
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button
+                      class="accordion-button collapsed"
+                      type="button"
+                      data-bs-toggle="collapse"
+                      data-bs-target="#flush-collapseThree"
+                      aria-expanded="false"
+                      aria-controls="flush-collapseThree"
+                    >
+                      Escribir en tu diario
+                    </button>
+                  </h2>
+                  <div
+                    id="flush-collapseThree"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionFlushExample"
+                  >
+                    <div class="accordion-body">
+                      No importa que tipo de día hayas tenido, escribete usando
+                      palabras amables.
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--hasta acá llega el accordion flush sobre los hábitos-->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección de Progreso mensual -->
+      <div class="progreso-mensual col-md-4 mb-3">
+        <div class="accordion accordion-flush" id="accordionFlushExample3">
+          <div class="accordion-item">
+            <h2 class="accordion-header">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#flush-collapseMensual"
+                aria-expanded="false"
+                aria-controls="flush-collapseMensual"
+              >
+                Progreso Mensual
+              </button>
+            </h2>
+            <div
+              id="flush-collapseMensual"
+              class="accordion-collapse collapse"
+              data-bs-parent="#accordionFlushExample3"
+            >
+              <div class="accordion-body">
+                Este mes has completado **** hábitos, ¡bien hecho!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de Estadísticas, para la barra de navegación -->
+    <div id="estadisticas" class="container mt-5 d-none">
+      <h2 class="text-center">Aquí van los gráficos</h2>
+    </div>
+
+    <!-- Para mostrar la pantalla correspondiente a la selección hecha mediante los botones de la barra de navegación-->
+    <script>
+      function showSection(section) {
+        document.getElementById("resumen").classList.add("d-none");
+        document.getElementById("estadisticas").classList.add("d-none");
+        document.getElementById(section).classList.remove("d-none"); //muestra resumen o estadisticas, la que el usuario haya seleccionado
+      }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

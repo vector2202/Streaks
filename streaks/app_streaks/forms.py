@@ -1,17 +1,21 @@
 from django import forms
 from .models import Category, Habit
+from django.contrib.auth.models import User
 
 class HabitForm (forms.ModelForm):
-    category = forms.ModelChoiceField(
-        queryset=Category.objects.all(),
-        widget=forms.Select(attrs={'class': 'form-control'}),
-        empty_label='Seleccione una categoria'
-    )
     class Meta:
         model = Habit
-        fields =['name', 'frequency', 'category', 'goal']
-        widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control'}),
-            'frequency': forms.Select(attrs={'class': 'form-control'}),
-            'goal': forms.NumberInput(attrs={'class': 'form-control', 'min': 1})
+        fields = ['name', 'frequency', 'category', 'goal']
+        labels = {
+            'name': 'Nombre del Hábito',
+            'frequency': 'Frecuencia',
+            'category': 'Categoría',
+            'goal': 'Meta',
         }
+        widgets = {
+            'name': forms.TextInput(attrs={'placeholder': 'Ingresa el nombre del hábito'}),
+            'frequency': forms.Select(),
+            'category': forms.Select(),
+            'goal': forms.NumberInput(attrs={'min': 1}),
+        }
+        

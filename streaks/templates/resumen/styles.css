@@ -1,0 +1,49 @@
+body {
+  height: 100vh;
+}
+
+/* Fondo personalizado */
+.bg-custom {
+  background-color: #8dd7f0 !important;
+  background-image: url('../images/fondito3.jpg');
+  background-size: cover;
+  background-repeat: repeat;
+  background-position: center center;
+}
+
+/* Fuente personalizada */
+.afacad-flux {
+  font-family: "Afacad Flux", sans-serif;
+  font-weight: 100;
+}
+
+/* Tamaños de fuentes */
+h2 {
+  font-size: 1.5rem; /* Tamaño de fuente relativo */
+  color: #343a40;
+}
+
+/*Recuadros (columnas) en que se organizarán sus diferentes avances del usuario*/
+.card {
+  border: none;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Botones */
+.btn-primary,
+.btn-success,
+.btn-danger {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Contenedor máximo */
+.container {
+  max-width: 1200px;
+}
+
+.card-body {
+  display: flex;
+  flex-direction: column;
+}

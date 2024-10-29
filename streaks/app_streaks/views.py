@@ -17,12 +17,11 @@ def user_register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            usuario = form.save()
-            login(request, usuario)  # Iniciar sesión 
-            return redirect('inicio')  # Redirigir a la página de inicio 
+            user = form.save()
+            login(request, user)  # Iniciar sesión
+            return redirect('home')  # Redirigir a la página de inicio 
     else:
         form = UserCreationForm()
-    
     return render(request, 'register.html', {'form': form})
 
 
@@ -31,12 +30,12 @@ def user_register(request):
 def home(request):
     today = datetime.today().date()
     
-    habits = Habit.objects.filter(usuario=request.user)
+    habits = Habit.objects.filter(user=request.user)
 
     completed_today = HabitCompletion.objects.filter(
         habit__in = habits,
         date = today
-    ).values_list('habit-id', flat=True)
+    ).values_list('habit_id', flat=True)
 
     pendings = []
 
@@ -58,28 +57,26 @@ def home(request):
     habits_completed_today = habits.filter(id__in=completed_today)
     context = {
         'pendientes': pendings,
-        'completados hoy': habits_completed_today
+        'completados_hoy': habits_completed_today
     }
-    return render(request, 'habits/home.html', context)
+    return render(request, 'resumen/Resumen.html', context)
+
 @login_required
 def create_habit(request):
     if request.method == 'POST':
         form = HabitForm(request.POST)
         if form.is_valid():
             habit = form.save(commit=False)
-            habit.usuario = request.user
+            habit.user = request.user
             habit.save()
             return redirect('view_habits')
     else:
         form = HabitForm()
-    return render(request, 'habits/create_habit.html', {'form': form})
-
-@login_required
-
+    return render(request, 'create/CreacionHabitos.html', {'form': form})
 
 @login_required
 def view_habits(request):
-    habits = Habit.objects.filter(usuario=request.user)
+    habits = Habit.objects.filter(user=request.user)
     today = datetime.today().date()
     categoria_id = request.GET.get('categoria')
     if categoria_id and categoria_id.isdigit():
@@ -126,12 +123,12 @@ def view_habits(request):
         'filtro_fecha_inicio': start_date,
         'filtro_fecha_fin': end_date,
     }
-    return render(request, 'habits/view_habits.html', context)
+    return render(request, 'resumen/Resumen.html', context)
 
 
 @login_required
 def complete_habit(request, habit_id):
-    habit = Habit.objects.get(id=habit_id, usuario=request.user)
+    habit = Habit.objects.get(id=habit_id, user=request.user)
     today = datetime.today().date()
     completed = HabitCompletion.objects.filter(habit=habit, fecha=today).first()
     if not completed:

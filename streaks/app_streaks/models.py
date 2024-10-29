@@ -7,14 +7,19 @@ class Category(models.Model):
         return f'{self.nombre}'
     
 class Habit(models.Model):
-        FREQUENCY_CHOICES = [('diaria', 'Diaria'),
-                             ('semanal', 'Semanal'),
-                             ('mensual', 'Mensual'),
-                             ]
         user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='habits')
         name = models.CharField(max_length=100)
-        frequency = models.CharField(max_length=10, choices=FREQUENCY_CHOICES)
-        category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, related_name='habits')
+        frequency = models.CharField(max_length=50, choices=[
+            ('daily', 'Diario'),
+            ('weekly', 'Semanal'),
+            ('monthly', 'Mensual'),
+        ])
+        category = models.CharField(max_length=50, choices=[
+            ('salud', 'Salud'),
+            ('deporte', 'Deporte'),
+            ('trabajo', 'Trabajo'),
+            ('personal', 'Personal'),
+        ])
         goal = models.IntegerField(default=1)
         creation_date = models.DateTimeField(auto_now_add=True)
 
@@ -29,7 +34,7 @@ class HabitCompletion(models.Model):
         return f'{self.habit.name} completado el {self.date}' 
 
 class Notificacion(models.Model):
-     ususario = models.ForeignKey(User, on_delete= models.CASCADE)
+     usuario = models.ForeignKey(User, on_delete= models.CASCADE)
      mensaje = models.TextField()
      leido = models.BooleanField(default=False)
      fecha_creacion = models.DateTimeField(auto_now_add=True)
@@ -39,7 +44,7 @@ def __str__(self):
 
 class PreferenciasNotificacion(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
-    recibir_promociones = models.BooleanField(default=True)
+    recibir_notificaciones = models.BooleanField(default=True)
     frecuencia = models.CharField(
         max_length = 10,
         choices = [('diaria','Diaria'), ('semanal','Semanal'), ('mensual', 'Mensual')],
