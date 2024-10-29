@@ -388,7 +388,8 @@
           </div>
         </div>
 
-        <!-- Toast de Bootstrap -->
+        <!-- Toasts (mensajes motivacionales emergentes) -->
+        <!-- Toast de Salud -->
         <div
           aria-live="polite"
           aria-atomic="true"
@@ -608,21 +609,6 @@
           document.getElementById("dias-semana").style.display = "none";
         }
       }
-
-      // Agregar función a todas las checkbox
-      // document.querySelectorAll('input[type=checkbox]').forEach(element => element.addEventListener('click', disableOther))
-
-      // function disableOther(event) {
-      //   if (event.target.checked) {
-      //     // Si la checkbox actual está seleccionada, deshabilita las demás
-      //     document.querySelectorAll('input[type=checkbox]').forEach(element => element.disabled = true)
-      //     // Activar la checkbox actual
-      //     event.target.disabled = false;
-      //   } else {
-      //     // Si la checkbox actual NO está seleccionada, habilita las demás
-      //     document.querySelectorAll('input[type=checkbox]').forEach(element => element.disabled = false)
-      //   }
-      // }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -631,26 +617,21 @@
         document.getElementById("categoria-habito").value = categoria;
         // Cambia el texto del botón del dropdown a la categoría seleccionada
         document.getElementById("dropdownCategoria").textContent = categoria;
-        // Verifica si la categoría es "Salud" para mostrar el toast
+
+        // Verifica la categoría seleccionada y muestra el toast correspondiente
         if (categoria === "Salud") {
           var toastEl = document.getElementById("toastSalud");
           var toast = new bootstrap.Toast(toastEl);
           toast.show();
-        }
-        // Verifica si la categoría es "Salud" para mostrar el toast
-        if (categoria === "Deporte") {
+        } else if (categoria === "Deporte") {
           var toastEl = document.getElementById("toastDeporte");
           var toast = new bootstrap.Toast(toastEl);
           toast.show();
-        }
-        // Verifica si la categoría es "Salud" para mostrar el toast
-        if (categoria === "Trabajo") {
+        } else if (categoria === "Trabajo") {
           var toastEl = document.getElementById("toastTrabajo");
           var toast = new bootstrap.Toast(toastEl);
           toast.show();
-        }
-        // Verifica si la categoría es "Salud" para mostrar el toast
-        if (categoria === "Personal") {
+        } else if (categoria === "Personal") {
           var toastEl = document.getElementById("toastPersonal");
           var toast = new bootstrap.Toast(toastEl);
           toast.show();
