@@ -90,15 +90,13 @@
         </div>
       </div>
     </div>
-    
 
     <!---------------------- Creación de habitos owo ----------------->
 
     <div class="container w-75">
       <h2>Crear un Nuevo Hábito</h2>
       <form method="POST" action="{% url 'create_habit' %}" id="habit-form">
-	{% csrf_token %}
-	{{ form.as_p }}
+        {% csrf_token %} {{ form.as_p }}
         <!-- Nombre del hábito -->
         <div class="mb-3">
           <label for="nombre-habito" class="form-label">Nombre</label>
@@ -106,9 +104,9 @@
             type="text"
             class="form-control"
             id="name"
-	    name="nombre_habito"
+            name="nombre_habito"
             placeholder="Introduce el nombre de la rutina que deseas realizar"
-	    required
+            required
           />
         </div>
 
@@ -131,85 +129,147 @@
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarFrecuencia('diaria')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-calendar-day"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar-day"
-                    viewBox="0 0 18 18">
                     <path
-                      d="M4.684 11.523v-2.3h2.261v-.61H4.684V6.801h2.464v-.61H4v5.332zm3.296 0h.676V8.98c0-.554.227-1.007.953-1.007.125 0 .258.004.329.015v-.613a2 2 0 0 0-.254-.02c-.582 0-.891.32-1.012.567h-.02v-.504H7.98zm2.805-5.093c0 .238.192.425.43.425a.428.428 0 1 0 0-.855.426.426 0 0 0-.43.43m.094 5.093h.672V7.418h-.672z" />
+                      d="M4.684 11.523v-2.3h2.261v-.61H4.684V6.801h2.464v-.61H4v5.332zm3.296 0h.676V8.98c0-.554.227-1.007.953-1.007.125 0 .258.004.329.015v-.613a2 2 0 0 0-.254-.02c-.582 0-.891.32-1.012.567h-.02v-.504H7.98zm2.805-5.093c0 .238.192.425.43.425a.428.428 0 1 0 0-.855.426.426 0 0 0-.43.43m.094 5.093h.672V7.418h-.672z"
+                    />
                     <path
-                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+                    />
                   </svg>
                   Diaria
-                </a
-                >
+                </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarFrecuencia('semanal')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-calendar-range"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar-range"
-                    viewBox="0 0 18 18">
-                    <path d="M9 7a1 1 0 0 1 1-1h5v2h-5a1 1 0 0 1-1-1M1 9h4a1 1 0 0 1 0 2H1z" />
                     <path
-                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                      d="M9 7a1 1 0 0 1 1-1h5v2h-5a1 1 0 0 1-1-1M1 9h4a1 1 0 0 1 0 2H1z"
+                    />
+                    <path
+                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+                    />
                   </svg>
                   Semanal
-                </a
-                >
+                </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarFrecuencia('mensual')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-calendar-month"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-calendar-month"
-                    viewBox="0 0 18 18">
                     <path
-                      d="M2.56 11.332 3.1 9.73h1.984l.54 1.602h.718L4.444 6h-.696L1.85 11.332zm1.544-4.527L4.9 9.18H3.284l.8-2.375zm5.746.422h-.676V9.77c0 .652-.414 1.023-1.004 1.023-.539 0-.98-.246-.98-1.012V7.227h-.676v2.746c0 .941.606 1.425 1.453 1.425.656 0 1.043-.28 1.188-.605h.027v.539h.668zm2.258 5.046c-.563 0-.91-.304-.985-.636h-.687c.094.683.625 1.199 1.668 1.199.93 0 1.746-.527 1.746-1.578V7.227h-.649v.578h-.019c-.191-.348-.637-.64-1.195-.64-.965 0-1.64.679-1.64 1.886v.34c0 1.23.683 1.902 1.64 1.902.558 0 1.008-.293 1.172-.648h.02v.605c0 .645-.423 1.023-1.071 1.023m.008-4.53c.648 0 1.062.527 1.062 1.359v.253c0 .848-.39 1.364-1.062 1.364-.692 0-1.098-.512-1.098-1.364v-.253c0-.868.406-1.36 1.098-1.36z" />
+                      d="M2.56 11.332 3.1 9.73h1.984l.54 1.602h.718L4.444 6h-.696L1.85 11.332zm1.544-4.527L4.9 9.18H3.284l.8-2.375zm5.746.422h-.676V9.77c0 .652-.414 1.023-1.004 1.023-.539 0-.98-.246-.98-1.012V7.227h-.676v2.746c0 .941.606 1.425 1.453 1.425.656 0 1.043-.28 1.188-.605h.027v.539h.668zm2.258 5.046c-.563 0-.91-.304-.985-.636h-.687c.094.683.625 1.199 1.668 1.199.93 0 1.746-.527 1.746-1.578V7.227h-.649v.578h-.019c-.191-.348-.637-.64-1.195-.64-.965 0-1.64.679-1.64 1.886v.34c0 1.23.683 1.902 1.64 1.902.558 0 1.008-.293 1.172-.648h.02v.605c0 .645-.423 1.023-1.071 1.023m.008-4.53c.648 0 1.062.527 1.062 1.359v.253c0 .848-.39 1.364-1.062 1.364-.692 0-1.098-.512-1.098-1.364v-.253c0-.868.406-1.36 1.098-1.36z"
+                    />
                     <path
-                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                      d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"
+                    />
                   </svg>
                   Mensual
-                </a
-                >
+                </a>
               </li>
             </ul>
             <!-- Seleccion del dia de la semana -->
-            <div id="dias-semana" class="mt-2" >
+            <div id="dias-semana" class="mt-2">
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-lunes">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-lunes"
+                />
                 <label class="form-check-label" for="dia-lunes">Lunes</label>
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-martes">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-martes"
+                />
                 <label class="form-check-label" for="dia-martes">Martes</label>
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-miercoles">
-                <label class="form-check-label" for="dia-miercoles">Miercoles</label>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-miercoles"
+                />
+                <label class="form-check-label" for="dia-miercoles"
+                  >Miercoles</label
+                >
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-jueves">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-jueves"
+                />
                 <label class="form-check-label" for="dia-jueves">Jueves</label>
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-viernes">
-                <label class="form-check-label" for="dia-viernes">Viernes</label>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-viernes"
+                />
+                <label class="form-check-label" for="dia-viernes"
+                  >Viernes</label
+                >
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-sabado">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-sabado"
+                />
                 <label class="form-check-label" for="dia-sabado">Sabado</label>
               </div>
               <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="dia-domingo">
-                <label class="form-check-label" for="dia-domingo">Domingo</label>
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  role="switch"
+                  id="dia-domingo"
+                />
+                <label class="form-check-label" for="dia-domingo"
+                  >Domingo</label
+                >
               </div>
             </div>
           </div>
-
         </div>
 
         <!-- Categoría del hábito -->
@@ -231,71 +291,229 @@
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarCategoria('Salud')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-capsule"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-capsule"
-                    viewBox="0 0 18 18">
                     <path
-                      d="M1.828 8.9 8.9 1.827a4 4 0 1 1 5.657 5.657l-7.07 7.071A4 4 0 1 1 1.827 8.9Zm9.128.771 2.893-2.893a3 3 0 1 0-4.243-4.242L6.713 5.429z" />
+                      d="M1.828 8.9 8.9 1.827a4 4 0 1 1 5.657 5.657l-7.07 7.071A4 4 0 1 1 1.827 8.9Zm9.128.771 2.893-2.893a3 3 0 1 0-4.243-4.242L6.713 5.429z"
+                    />
                   </svg>
                   Salud
-                </a
-                >
+                </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarCategoria('Deporte')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-battery-charging"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-battery-charging"
-                    viewBox="0 0 18 18">
                     <path
-                      d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z" />
-                    <path d="M2 4h4.332l-.94 1H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2.38l-.308 1H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2" />
+                      d="M9.585 2.568a.5.5 0 0 1 .226.58L8.677 6.832h1.99a.5.5 0 0 1 .364.843l-5.334 5.667a.5.5 0 0 1-.842-.49L5.99 9.167H4a.5.5 0 0 1-.364-.843l5.333-5.667a.5.5 0 0 1 .616-.09z"
+                    />
                     <path
-                      d="M2 6h2.45L2.908 7.639A1.5 1.5 0 0 0 3.313 10H2zm8.595-2-.308 1H12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9.276l-.942 1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
+                      d="M2 4h4.332l-.94 1H2a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h2.38l-.308 1H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2"
+                    />
                     <path
-                      d="M12 10h-1.783l1.542-1.639q.146-.156.241-.34zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646M16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8" />
+                      d="M2 6h2.45L2.908 7.639A1.5 1.5 0 0 0 3.313 10H2zm8.595-2-.308 1H12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1H9.276l-.942 1H12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"
+                    />
+                    <path
+                      d="M12 10h-1.783l1.542-1.639q.146-.156.241-.34zm0-3.354V6h-.646a1.5 1.5 0 0 1 .646.646M16 8a1.5 1.5 0 0 1-1.5 1.5v-3A1.5 1.5 0 0 1 16 8"
+                    />
                   </svg>
                   Deporte
-                  </a
-                >
+                </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarCategoria('Trabajo')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-journal"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-journal"
-                    viewBox="0 0 18 18">
                     <path
-                      d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2" />
+                      d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"
+                    />
                     <path
-                      d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z" />
+                      d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"
+                    />
                   </svg>
                   Trabajo
-                  </a
-                >
+                </a>
               </li>
               <li>
                 <a
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarCategoria('Personal')"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    fill="currentColor"
+                    class="bi bi-person-raised-hand"
+                    viewBox="0 0 18 18"
                   >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-raised-hand"
-                    viewBox="0 0 18 18">
                     <path
-                      d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207" />
+                      d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207"
+                    />
                     <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3" />
                   </svg>
                   Personal
-                  </a
-                >
+                </a>
               </li>
             </ul>
-	    <input type="hidden" name="categoria" id="categoria-habit" />
+            <input type="hidden" name="categoria" id="categoria-habito" />
+          </div>
+        </div>
+
+        <!-- Toasts (mensajes motivacionales emergentes) -->
+        <!-- Toast de Salud -->
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          class="position-fixed top-0 end-0 p-3"
+        >
+          <div
+            id="toastSalud"
+            class="toast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div class="toast-header">
+              <strong class="me-auto"
+                >Tenemos un mensaje importante para ti</strong
+              >
+              <small class="text-body-secondary">Ahora</small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="toast-body">
+              La salud es el motor de la felicidad; aliméntalo con buenos
+              hábitos.
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast de Deporte -->
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          class="position-fixed top-0 end-0 p-3"
+        >
+          <div
+            id="toastDeporte"
+            class="toast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div class="toast-header">
+              <strong class="me-auto"
+                >Tenemos un mensaje importante para ti</strong
+              >
+              <small class="text-body-secondary">Ahora</small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="toast-body">
+              Cada día que entrenas, construyes la mejor versión de ti. ¡Sigue
+              adelante!
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast de Trabajo -->
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          class="position-fixed top-0 end-0 p-3"
+        >
+          <div
+            id="toastTrabajo"
+            class="toast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div class="toast-header">
+              <strong class="me-auto"
+                >Tenemos un mensaje importante para ti</strong
+              >
+              <small class="text-body-secondary">Ahora</small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="toast-body">
+              Haz de tu trabajo un lugar de crecimiento y satisfacción. ¡Cada
+              día cuenta!
+            </div>
+          </div>
+        </div>
+
+        <!-- Toast de Personal -->
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          class="position-fixed top-0 end-0 p-3"
+        >
+          <div
+            id="toastPersonal"
+            class="toast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+          >
+            <div class="toast-header">
+              <strong class="me-auto"
+                >Tenemos un mensaje importante para ti</strong
+              >
+              <small class="text-body-secondary">Ahora</small>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="toast"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="toast-body">
+              Sé paciente y amable contigo mismo; el camino al bienestar lleva
+              tiempo y dedicación.
+            </div>
           </div>
         </div>
 
@@ -304,26 +522,41 @@
           <label for="objetivo-habito" id="titulo-objetivo" class="form-label">
             Meta que quieres alcanzar
           </label>
-          <input type="number" class="form-control" name="objetivo_habito" id="objetivo-habito" min="1" step="1" placeholder="Ej: 5" required/>
+          <input
+            type="number"
+            class="form-control"
+            name="objetivo_habito"
+            id="objetivo-habito"
+            min="1"
+            step="1"
+            placeholder="Ej: 5"
+            required
+          />
         </div>
 
         <!-- Botón de Crear Hábito -->
-	<button
-	  type="submit"  
-	  class="btn btn-success">
-	  Crear Hábito
-	</button>
-
+        <button type="submit" class="btn btn-success">Crear Hábito</button>
 
         <!-- Submit Modal -->
-        <div class="modal fade" id="submitModal" tabindex="-1" aria-labelledby="submitModalLabel" aria-hidden="true">
+        <div
+          class="modal fade"
+          id="submitModal"
+          tabindex="-1"
+          aria-labelledby="submitModalLabel"
+          aria-hidden="true"
+        >
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
               <div class="modal-header">
                 <h5 class="modal-title" id="submitModalLabel">
                   Tu hábito se guardó correctamente
                 </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
               </div>
               <!-- <div class="modal-body">
                 <p>
@@ -331,15 +564,17 @@
                 </p>
               </div> -->
               <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                <button
+                  type="button"
+                  class="btn btn-success"
+                  data-bs-dismiss="modal"
+                >
                   Entendido
                 </button>
               </div>
             </div>
           </div>
         </div>
-
-        
       </form>
     </div>
 
@@ -361,34 +596,47 @@
         var titulo = document.getElementById("titulo-objetivo");
 
         if (frecuencia == "diaria") {
-          titulo.textContent = "Número de veces al día que te notificaremos sobre tu hábito";
-          document.getElementById('dias-semana').style.display = "block";
+          titulo.textContent =
+            "Número de veces al día que te notificaremos sobre tu hábito";
+          document.getElementById("dias-semana").style.display = "block";
         } else if (frecuencia == "semanal") {
-          titulo.textContent = "Número de veces a la semana que te notificaremos sobre tu hábito";
-          document.getElementById('dias-semana').style.display = "none";
+          titulo.textContent =
+            "Número de veces a la semana que te notificaremos sobre tu hábito";
+          document.getElementById("dias-semana").style.display = "none";
         } else if (frecuencia == "mensual") {
-          titulo.textContent = "Número de veces al mes que te notificaremos sobre tu hábito";
-          document.getElementById('dias-semana').style.display = "none";
+          titulo.textContent =
+            "Número de veces al mes que te notificaremos sobre tu hábito";
+          document.getElementById("dias-semana").style.display = "none";
         }
       }
-
-      // Agregar función a todas las checkbox
-      // document.querySelectorAll('input[type=checkbox]').forEach(element => element.addEventListener('click', disableOther))
-
-
-      // function disableOther(event) {
-      //   if (event.target.checked) {
-      //     // Si la checkbox actual está seleccionada, deshabilita las demás
-      //     document.querySelectorAll('input[type=checkbox]').forEach(element => element.disabled = true)
-      //     // Activar la checkbox actual
-      //     event.target.disabled = false;
-      //   } else {
-      //     // Si la checkbox actual NO está seleccionada, habilita las demás
-      //     document.querySelectorAll('input[type=checkbox]').forEach(element => element.disabled = false)
-      //   }
-      // }
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      function seleccionarCategoria(categoria) {
+        document.getElementById("categoria-habito").value = categoria;
+        // Cambia el texto del botón del dropdown a la categoría seleccionada
+        document.getElementById("dropdownCategoria").textContent = categoria;
+
+        // Verifica la categoría seleccionada y muestra el toast correspondiente
+        if (categoria === "Salud") {
+          var toastEl = document.getElementById("toastSalud");
+          var toast = new bootstrap.Toast(toastEl);
+          toast.show();
+        } else if (categoria === "Deporte") {
+          var toastEl = document.getElementById("toastDeporte");
+          var toast = new bootstrap.Toast(toastEl);
+          toast.show();
+        } else if (categoria === "Trabajo") {
+          var toastEl = document.getElementById("toastTrabajo");
+          var toast = new bootstrap.Toast(toastEl);
+          toast.show();
+        } else if (categoria === "Personal") {
+          var toastEl = document.getElementById("toastPersonal");
+          var toast = new bootstrap.Toast(toastEl);
+          toast.show();
+        }
+      }
+    </script>
   </body>
 </html>
