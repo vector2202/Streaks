@@ -31,9 +31,8 @@ def user_register(request):
 @login_required
 def home(request):
     today = datetime.today().date()
-    
+    print(request.user)
     habits = Habit.objects.filter(user=request.user)
-
     completed_today = HabitCompletion.objects.filter(
         habit__in = habits,
         date = today
@@ -42,22 +41,25 @@ def home(request):
     pendings = []
 
     for habit in habits:
-        if habit.frecuencia == 'diaria':
+        print(habit.frequency)
+        if habit.frequency == 'dayly':
             completado = HabitCompletion.objects.filter(habit=habit, fecha=today).exists()
             if not completado:
                 pendings.append(habit)
-        elif habit.frecuencia == 'semanal':
+        elif habit.frequency == 'weekly':
+            print("Semanal")
             start_of_week = today - timedelta(days=today.weekday())
-            completado = HabitCompletion.objects.filter(habit=habit, fecha__gte=start_of_week, fecha__lte=today).exists()
+            completado = HabitCompletion.objects.filter(habit=habit, date__gte=start_of_week, date__lte=today).exists()
             if not completado:
                 pendings.append(habit)
-        elif habit.frecuencia == 'mensual':
+        elif habit.frequency == 'monthly':
             start_of_month = today.replace(day=1)
             completado = HabitCompletion.objects.filter(habit=habit, fecha__gte=start_of_month, fecha__lte=today).exists()
             if not completado:
                 pendings.append(habit)
     habits_completed_today = habits.filter(id__in=completed_today)
     user_name = request.user.get_full_name() or request.user.username
+
     context = {
         'pendientes': pendings,
         'completados_hoy': habits_completed_today,
@@ -68,21 +70,16 @@ def home(request):
 @login_required
 def create_habit(request):
     if request.method == 'POST':
+        name = request.POST.get("name")
+        frequency = request.POST.get("frequency")
         form = HabitForm(request.POST)
         print(form)
         if form.is_valid():
-            habit = form.save(commit=False)
-            selected_days = request.POST.getlist('selected_days')
-            today = datetime.now()
-            
-
-            for day in selected_days:
-                next_date = calculate_next_date(today, day)
-                habit.created_at = next_date
-                habit.save()
-            print(f"Hábito creado: {habit.name} para el {habit.created_at}. Redirigiendo a home.")
-            messages.success(request, 'Hábito creado con éxito.')
-            logger.info(f"Hábito creado: {habit.name} para el {habit.created_at}. Redirigiendo a home.")
+            Habit.objects.create(
+                name=name,
+                frequency=frequency,
+                user=request.user  # Asigna el usuario actual
+            )
             return redirect('home')
     else:
         form = HabitForm()

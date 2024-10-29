@@ -98,13 +98,14 @@
       <h2>Crear un Nuevo Hábito</h2>
       <form method="POST" action="{% url 'create_habit' %}" id="habit-form">
 	{% csrf_token %}
+	{{ form.as_p }}
         <!-- Nombre del hábito -->
         <div class="mb-3">
           <label for="nombre-habito" class="form-label">Nombre</label>
           <input
             type="text"
             class="form-control"
-            id="nombre-habito"
+            id="name"
 	    name="nombre_habito"
             placeholder="Introduce el nombre de la rutina que deseas realizar"
 	    required
