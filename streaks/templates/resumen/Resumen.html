@@ -42,27 +42,50 @@
           </button>
         </div>
 
-        <div class="d-flex ms-2">
-          <!-- Botón de notificaciones con circulito -->
-          <button type="button" class="btn btn-primary position-relative mx-2">
-            Notificaciones
-            <span
-              class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle"
-            >
-              <span class="visually-hidden">New alerts</span>
-            </span>
-          </button>
+  <!-- Dropdown de Perfil -->
+  <div class="dropdown ms-2">
+    <button
+      class="btn btn-outline-light dropdown-toggle"
+      type="button"
+      id="perfilDropdown"
+      data-bs-toggle="dropdown"
+      aria-expanded="false"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+  </svg>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
+      <li>
+        <!-- Botón de notificaciones dentro del dropdown -->
+        <button type="button" class="dropdown-item">
+          Notificaciones
+          <span
+            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+          >
+            <span class="visually-hidden">New alerts</span>
+          </span>
+        </button>
+      </li>
+      <li><hr class="dropdown-divider" /></li>
+      <li>
+        <!-- Botón de cerrar sesión dentro del dropdown-->
+        <a class="dropdown-item" href="#">Cerrar sesión</a>
+      </li>
+    </ul>
+  </div>
 
           <!-- Botón de ayuda con ícono de pregunta, al darle click, se arroja un modal -->
           <button
-            class="btn btn-outline-light"
+            class="btn btn-outline-light ms-2"
             data-bs-toggle="modal"
             data-bs-target="#helpModal"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
+              width="20"
+              height="20"
               fill="currentColor"
               class="bi bi-question-circle"
               viewBox="0 0 16 16"
