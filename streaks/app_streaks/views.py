@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login, logout
 from .forms import HabitForm
 from .models import Habit, HabitCompletion, Notificacion, PreferenciasNotificacion
 from django.db.models import Count
@@ -20,11 +20,12 @@ def user_register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user)  # Iniciar sesión
-            return redirect('home')  # Redirigir a la página de inicio 
+            login(request, user)
+            print("Registro exitoso")
+            return redirect('home')
     else:
         form = UserCreationForm()
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'register/Registro.html', {'form': form})
 
 
 
@@ -42,8 +43,8 @@ def home(request):
 
     for habit in habits:
         print(habit.frequency)
-        if habit.frequency == 'dayly':
-            completado = HabitCompletion.objects.filter(habit=habit, fecha=today).exists()
+        if habit.frequency == 'daily':
+            completado = HabitCompletion.objects.filter(habit=habit, date=today).exists()
             if not completado:
                 pendings.append(habit)
         elif habit.frequency == 'weekly':
@@ -54,7 +55,7 @@ def home(request):
                 pendings.append(habit)
         elif habit.frequency == 'monthly':
             start_of_month = today.replace(day=1)
-            completado = HabitCompletion.objects.filter(habit=habit, fecha__gte=start_of_month, fecha__lte=today).exists()
+            completado = HabitCompletion.objects.filter(habit=habit, date__gte=start_of_month, date__lte=today).exists()
             if not completado:
                 pendings.append(habit)
     habits_completed_today = habits.filter(id__in=completed_today)
@@ -72,13 +73,15 @@ def create_habit(request):
     if request.method == 'POST':
         name = request.POST.get("name")
         frequency = request.POST.get("frequency")
+        goal = request.POST.get("goal")
         form = HabitForm(request.POST)
         print(form)
         if form.is_valid():
             Habit.objects.create(
                 name=name,
                 frequency=frequency,
-                user=request.user  # Asigna el usuario actual
+                user=request.user,
+                goal=goal
             )
             return redirect('home')
     else:
@@ -161,18 +164,32 @@ def view_habits(request):
     return render(request, 'resumen/Resumen.html', context)
 
 
-@login_required
+
 def complete_habit(request, habit_id):
     habit = Habit.objects.get(id=habit_id, user=request.user)
     today = datetime.today().date()
-    completed = HabitCompletion.objects.filter(habit=habit, fecha=today).first()
+    completed = HabitCompletion.objects.filter(habit=habit, date=today).first()
     if not completed:
         HabitCompletion.objects.create(habit=habit)
-        messages.success(request, f"Hábito '{habit.nombre}' completado exitosamente.")
+        messages.success(request, f"Hábito '{habit.name}' completado exitosamente.")
     else:
-        messages.info(request, f"Ya has completado el hábito '{habit.nombre}' hoy.")
-    
-    return redirect('home')
+        messages.info(request, f"Ya has completado el hábito '{habit.name}' hoy.")
+
+def decrement_goal(request, habit_id):
+    if request.method == 'POST':
+        print("decrement goal")
+        try:
+            habit = Habit.objects.get(id=habit_id)
+            if habit.goal > 0:
+                habit.goal -= 1
+                habit.save()
+            if habit.goal == 0:
+                complete_habit(request, habit.id)
+            return JsonResponse({'status': 'success', 'goal': habit.goal}, status=200)
+        except Habit.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Hábito no encontrado'}, status=404)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=405)
 
 def enviar_notificaciones():
     hoy = datetime.now()
@@ -234,4 +251,6 @@ def marcar_notificaciones_leidas(request):
     else:
         return JsonResponse({'status': 'error', 'message': 'Método no permitido'}, status=400)
            
-
+def user_logout(request):
+    logout(request)
+    return redirect('login')

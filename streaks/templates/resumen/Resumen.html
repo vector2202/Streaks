@@ -71,7 +71,7 @@
       <li><hr class="dropdown-divider" /></li>
       <li>
         <!-- Botón de cerrar sesión dentro del dropdown-->
-        <a class="dropdown-item" href="#">Cerrar sesión</a>
+        <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
       </li>
     </ul>
   </div>
@@ -167,15 +167,21 @@
               <!-- Checkboxes dentro de marcar hábitos seleccionados-->
               <div class="form-check">
 		{% for habit in pendientes %}
-		<div class="form-check">
-		  <input class="form-check-input" type="checkbox" id="habit_{{ habit.id }}" value="{{ habit.id }}" />
+		<div class="form-check" id="habit-container-{{ habit.id }}">
+		  <input
+		    class="form-check-input"
+		    type="checkbox"
+		    id="habit_{{ habit.id }}"
+		    value="{{ habit.id }}"
+		    onclick="handleCheckboxClick({{ habit.id }}, {{ habit.goal }})"
+		    />
 		  <label class="form-check-label" for="habit_{{ habit.id }}">
 		    {{ habit.name }}
 		  </label>
 		</div>
 		{% empty %}
 		<div class="form-check">
-		  <p>No hay hábitos pendientes.</p>
+		  <p id="no-habits">No hay hábitos pendientes.</p>
 		</div>
 		{% endfor %}
 	      </div>
@@ -427,10 +433,42 @@
     <!-- Para mostrar la pantalla correspondiente a la selección hecha mediante los botones de la barra de navegación-->
     <script>
       function showSection(section) {
-        document.getElementById("resumen").classList.add("d-none");
-        document.getElementById("estadisticas").classList.add("d-none");
-        document.getElementById(section).classList.remove("d-none"); //muestra resumen o estadisticas, la que el usuario haya seleccionado
+          document.getElementById("resumen").classList.add("d-none");
+          document.getElementById("estadisticas").classList.add("d-none");
+          document.getElementById(section).classList.remove("d-none"); //muestra resumen o estadisticas, la que el usuario haya seleccionado
       }
+      async function handleCheckboxClick(habitId, goal) {
+	  console.log("decrementando")
+	  const checkbox = document.getElementById(`habit_${habitId}`);
+	  if (checkbox.checked) {
+              try {
+		  console.log("decrementando")
+		  const response = await fetch(`/decrement_goal/${habitId}/`, {
+                      method: 'POST',
+                      headers: {
+			  'X-CSRFToken': '{{ csrf_token }}',
+			  'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ habit_id: habitId })
+		  });
+		  if (response.ok) {
+		      checkbox.checked = false;
+                      const result = await response.json();
+                      if (result.goal <= 0) {
+			  const habitContainer = document.getElementById(`habit-container-${habitId}`);
+			  habitContainer.remove();
+			  alert(`¡Habito completado! Has alcanzado tu meta para "${habitContainer.textContent.trim()}"`);
+
+                      }
+		  } else {
+                      console.error("Error en la respuesta del servidor.");
+		  }
+              } catch (error) {
+		  console.error("Error en la petición:", error);
+              }
+	  }
+      }
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

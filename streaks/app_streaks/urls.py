@@ -9,7 +9,8 @@ urlpatterns = [
     path('create/', views.create_habit, name='create_habit'),
     path('view/', views.view_habits, name='view_habits'),
     path('complete_habit/<int:habit_id>/', views.complete_habit, name='complete_habit'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('logout/', views.user_logout, name='logout'),
     #path('progress/', views.progress_view, name='progress'),
     path('configurar_notificaciones/',views.configurar_notifiaciones,name='configurar_notificaciones'),
+    path('decrement_goal/<int:habit_id>/', views.decrement_goal, name='decrement_goal'),
 ]
