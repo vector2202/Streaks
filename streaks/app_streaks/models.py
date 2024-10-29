@@ -19,7 +19,7 @@ class Habit(models.Model):
             ('deporte', 'Deporte'),
             ('trabajo', 'Trabajo'),
             ('personal', 'Personal'),
-        ],default='uncategorized')
+        ]o,default='uncategorized')
         goal = models.IntegerField(default=1)
         creation_date = models.DateTimeField(auto_now_add=True)
 
