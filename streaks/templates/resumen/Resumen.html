@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Resumen</title>
+    <title>Home</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'resumen/styles.css' %}" />
     <link
@@ -255,7 +255,7 @@
               data-bs-parent="#accordionFlushExample1"
             >
               <div class="accordion-body">
-                Hoy has completado **** hábitos, ¡bien hecho!
+                Hoy has completado {{ estadistica_diaria }} hábitos, ¡bien hecho!
               </div>
             </div>
           </div>
@@ -284,7 +284,7 @@
               data-bs-parent="#accordionFlushExample2"
             >
               <div class="accordion-body">
-                ¡Felicidades! Has terminado *** de tus hábitos esta semana.
+                ¡Felicidades! Has terminado {{ estadistica_semanal }} de tus hábitos esta semana.
               </div>
 
               <!--Accordion flush-->
@@ -386,7 +386,7 @@
               data-bs-parent="#accordionFlushExample3"
             >
               <div class="accordion-body">
-                Este mes has completado **** hábitos, ¡bien hecho!
+                Este mes has completado {{ estadistica_mensual }} hábitos, ¡bien hecho!
               </div>
             </div>
           </div>

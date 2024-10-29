@@ -21,10 +21,11 @@ class Habit(models.Model):
             ('personal', 'Personal'),
         ],default='uncategorized')
         goal = models.IntegerField(default=1)
-        creation_date = models.DateTimeField(auto_now_add=True)
+        original_goal = models.IntegerField(default=1)
+        creation_date = models.DateTimeField(blank=True, null=False)
 
         def __str__(self):
-            return f'{self.name}'
+            return f'{self.name}, date:{self.creation_date}'
         
         
 class HabitCompletion(models.Model):

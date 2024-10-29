@@ -32,38 +32,46 @@ def user_register(request):
 @login_required
 def home(request):
     today = datetime.today().date()
-    habits = Habit.objects.filter(user=request.user)
+    habits = Habit.objects.filter(user=request.user, creation_date__date__lte=today)
     completed_today = HabitCompletion.objects.filter(
         habit__in = habits,
         date = today
     ).values_list('habit_id', flat=True)
-
+    print(completed_today)
+    print(habits)
     pendings = []
-
+    start_of_week = today - timedelta(days=today.weekday())
+    start_of_month = today.replace(day=1)
     for habit in habits:
-        print(habit.frequency)
         if habit.frequency == 'daily':
-            completado = HabitCompletion.objects.filter(habit=habit, date=today).exists()
+            completado = HabitCompletion.objects.filter(habit_id=habit.id, date=today).exists()
+            print(completado)
             if not completado:
                 pendings.append(habit)
         elif habit.frequency == 'weekly':
-            print("Semanal")
-            start_of_week = today - timedelta(days=today.weekday())
-            completado = HabitCompletion.objects.filter(habit=habit, date__gte=start_of_week, date__lte=today).exists()
+            completado = HabitCompletion.objects.filter(habit_id=habit.id, date__gte=start_of_week, date__lte=today).exists()
             if not completado:
                 pendings.append(habit)
         elif habit.frequency == 'monthly':
-            start_of_month = today.replace(day=1)
-            completado = HabitCompletion.objects.filter(habit=habit, date__gte=start_of_month, date__lte=today).exists()
+            
+            completado = HabitCompletion.objects.filter(habit_id=habit.id, date__gte=start_of_month, date__lte=today).exists()
             if not completado:
                 pendings.append(habit)
+    print(pendings)
     habits_completed_today = habits.filter(id__in=completed_today)
-    user_name = request.user.get_full_name() or request.user.username
-
+    user_name = request.user
+    print(Habit.objects.filter(user=user_name, creation_date__date=today))
+    sts_daily = calcular_porcentaje_habitos(Habit.objects.filter(user=user_name, creation_date__date=today))
+    sts_weekly = calcular_porcentaje_habitos(Habit.objects.filter(user=user_name, creation_date__date__gte=start_of_week, creation_date__date__lte=today))
+    sts_monthly = calcular_porcentaje_habitos(Habit.objects.filter(user=user_name, creation_date__date__gte=start_of_month, creation_date__date__lte=today))
+    print(sts_daily, sts_weekly, sts_monthly)
     context = {
         'pendientes': pendings,
         'completados_hoy': habits_completed_today,
-        'user_name': user_name
+        'user_name': user_name,
+        'estadistica_diaria': sts_daily,
+        'estadistica_semanal': sts_weekly,
+        'estadistica_mensual': sts_monthly
     }
     return render(request, 'resumen/Resumen.html', context)
 
@@ -82,7 +90,9 @@ def create_habit(request):
                 frequency=frequency,
                 user=request.user,
                 category=category,
-                goal=goal
+                goal=goal,
+                original_goal=goal,
+                creation_date=timezone.now()
             )
             return redirect('home')
     else:
@@ -110,8 +120,18 @@ def calculate_next_date(start_date, day):
         next_date = start_date + timedelta(days=(target_weekday - today_weekday))
     
     return next_date
-
-
+@login_required
+def get_habits_stats(request):
+    start_date = request.GET.get('fecha_inicio')
+    end_date = request.GET.get('fecha_fin')
+    start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+    end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+    habits = Habit.objects.filter(user=request.user, date__gte=start_date, date__lte=end_date)
+    porcentaje = calcular_porcentaje_habitos(habits)
+    context = {
+        'porcentaje': porcentaje
+    }
+    return render(request, 'resume/Resumen.html', context)
 @login_required
 def view_habits(request):
     habits = Habit.objects.filter(user=request.user)
@@ -164,15 +184,51 @@ def view_habits(request):
     }
     return render(request, 'resumen/Resumen.html', context)
 
+def calcular_porcentaje_habitos(habits):
+    total_porcentaje = 0
+    habit_count = 0
 
+    for habit in habits:
+        original_goal = habit.original_goal
+        if original_goal > 0:
+            actual_goal = habit.goal
+            porcentaje_habit = ((original_goal - actual_goal) / original_goal) * 100
+            total_porcentaje += porcentaje_habit
+            habit_count += 1
+
+    return total_porcentaje / habit_count if habit_count > 0 else 0
 
 def complete_habit(request, habit_id):
     habit = Habit.objects.get(id=habit_id, user=request.user)
     today = datetime.today().date()
     completed = HabitCompletion.objects.filter(habit=habit, date=today).first()
     if not completed:
-        HabitCompletion.objects.create(habit=habit)
+        HabitCompletion.objects.create(habit=habit,
+                                       date=today)
         messages.success(request, f"Hábito '{habit.name}' completado exitosamente.")
+        
+        if habit.frequency == 'daily':
+            next_date = today + timedelta(days=1)
+        elif habit.frequency == 'weekly':
+            next_date = today + timedelta(weeks=1)
+        elif habit.frequency == 'monthly':
+            next_date = today.replace(day=1) + timedelta(days=31)
+            next_date = next_date.replace(day=1)  # Ajusta al primer día del próximo mes
+        else:
+            next_date = None
+        print("Next date")
+        print(next_date)
+        # Crea una nueva instancia de Habit para el próximo período
+        if next_date:
+            Habit.objects.create(
+                name=habit.name,
+                frequency=habit.frequency,
+                category=habit.category,
+                goal=habit.original_goal,
+                original_goal=habit.original_goal,
+                user=request.user,
+                creation_date=next_date  
+            )
     else:
         messages.info(request, f"Ya has completado el hábito '{habit.name}' hoy.")
 
