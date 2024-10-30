@@ -252,7 +252,7 @@ def complete_habit(request, habit_id):
                 goal=habit.original_goal,
                 original_goal=habit.original_goal,
                 user=request.user,
-                creation_date=next_date  
+                creation_date=next_date
             )
     else:
         messages.info(request, f"Ya has completado el hábito '{habit.name}' hoy.")
