@@ -12,5 +12,6 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     #path('progress/', views.progress_view, name='progress'),
     path('configurar_notificaciones/',views.configurar_notifiaciones,name='configurar_notificaciones'),
+    path('marcar_notificaciones_leidas/', views.marcar_notificaciones_leidas, name='marcar_notificaciones_leidas'),
     path('decrement_goal/<int:habit_id>/', views.decrement_goal, name='decrement_goal'),
 ]

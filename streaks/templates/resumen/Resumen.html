@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Resumen</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'resumen/styles.css' %}" />
     <link
@@ -16,6 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap"
       rel="stylesheet"
     />
+    <script src="script.js"></script>
   </head>
 
   <!-- Barra de navegación -->
@@ -57,24 +58,34 @@
   </svg>
     </button>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
-      <li>
-        <!-- Botón de notificaciones dentro del dropdown -->
-        <button type="button" class="dropdown-item">
-          Notificaciones
-          <span
-            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
-          >
-            <span class="visually-hidden">New alerts</span>
-          </span>
-        </button>
-      </li>
-      <li><hr class="dropdown-divider" /></li>
-      <li>
         <!-- Botón de cerrar sesión dentro del dropdown-->
         <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
       </li>
     </ul>
   </div>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="notificacionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+     <button type="button" class="btn btn-primary position-relative mx-2">
+       Notificaciones
+         <span class="visually-hidden">New alerts</span>
+       </span>
+     </button>
+        {% if notificaciones_no_leidas > 0 %}
+            <span class="badge bg-danger">{{ notificaciones_no_leidas }}</span>
+        {% endif %}
+      >  
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificacionesDropdown">
+        {% if notificaciones %}
+            {% for notificacion in notificaciones %}
+                <li><a class="dropdown-item" href="#">{{ notificacion.mensaje }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li><a class="dropdown-item" href="#">No tienes notificaciones</a></li>
+        {% endif %}
+    </ul>
+</li>
 
           <!-- Botón de ayuda con ícono de pregunta, al darle click, se arroja un modal -->
           <button
@@ -163,7 +174,10 @@
           <div class="card">
             <div class="card-body">
               <h4 class="card-title">Hábitos completados</h4>
-              <p class="card-text">Selecciona los hábitos que has completado</p>
+              <h6 class="card-title">
+                Selecciona los hábitos que has completado y marcalos todas las veces
+              </h6>
+              <p class="card-text">Ej: Si estableciste que se repitiera 5 veces, tienes que marcarlo 5 veces para que desaparezca ;)</p>
               <!-- Checkboxes dentro de marcar hábitos seleccionados-->
               <div class="form-check">
 		{% for habit in pendientes %}
@@ -189,41 +203,45 @@
           </div>
         </div>
 
-        <!-- Sección de Hábitos Pendientes -->
-        <div class="habitos-pendientes col-md-6 mb-3">
-          <div class="card h-100">
-            <div class="card-body">
-              <h4 class="card-title">Hábitos Pendientes</h4>
-              <h5 class="card-title">
-                Hábitos mostrados desde el más antiguo al creado más
-                recientemente
-              </h5>
+<!-- Sección de Hábitos Pendientes -->
+<div class="habitos-pendientes col-md-6 mb-3">
+  <div class="card h-100">
+    <div class="card-body">
+      <h4 class="card-title">Hábitos Pendientes</h4>
+      <h6 class="card-title">
+        Hábitos mostrados desde el más antiguo al creado más
+        recientemente
+      </h6>
 
-              <p class="card-text">
-                Un pequeño esfuerzo más y habrás logrado otro paso hacia tus
-                objetivos.
-              </p>
-
+      <p class="card-text">
+        Además, te recordamos las repeticiones que te faltan para concluir exitosamente tu hábito!
+      </p>
+        <!-- Muestra un mensaje personalizado dependiendo de la categoría que el usuario escogió previamente en CreacionHabitos-->
               <div class="list-group">
-		{% for habit in pendientes %}
-                <a
-                  href="#"
-                  class="list-group-item list-group-item-action active"
-                >
+                {% for habit in pendientes %}
+                <a href="#" class="list-group-item list-group-item-action active">
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{ habit.name }}</h5>
-                    <small class="text-body-secondary">Faltan {{ habit.goal}} repeticiones.</small>
+                    <small class="text-body-secondary">Faltan {{ habit.goal }} repeticiones.</small>
                   </div>
                   <p class="mb-1">
-                    mensaje
+                    {% if habit.category == "salud" %}
+                    Recuerda que eres tu mayor proyecto. Cuida tu cuerpo y mente con amor.
+                    {% elif habit.category == "deporte" %}
+                    Tu único límite es el que tú te pones. Rompe barreras, crea una nueva versión de ti.
+                    {% elif habit.category == "trabajo" %}
+                    Trabaja duro, pero también trabaja en estar bien. El balance es el verdadero éxito.
+                    {% elif habit.category == "personal" %}
+                    El amor propio es el primer paso para una vida plena y satisfactoria. Sé tu prioridad
+                    {% else %}
+                      Recuerda completar este hábito.
+                    {% endif %}
                   </p>
-                  <small class="text-body-secondary"
-                    >{{ habit.category }}</small
-                  >
+                  <small class="text-body-secondary">{{ habit.category }}</small>
                 </a>
-		{% empty %}
-		<p>No hay hábitos pendientes.</p>
-		{% endfor %}
+                {% empty %}
+                <p>No hay hábitos pendientes.</p>
+                {% endfor %}
               </div>
             </div>
           </div>
@@ -255,7 +273,7 @@
               data-bs-parent="#accordionFlushExample1"
             >
               <div class="accordion-body">
-                Hoy has completado {{ estadistica_diaria }} hábitos, ¡bien hecho!
+                Hoy has completado **** hábitos, ¡bien hecho!
               </div>
             </div>
           </div>
@@ -284,7 +302,7 @@
               data-bs-parent="#accordionFlushExample2"
             >
               <div class="accordion-body">
-                ¡Felicidades! Has terminado {{ estadistica_semanal }} de tus hábitos esta semana.
+                ¡Felicidades! Has terminado *** de tus hábitos esta semana.
               </div>
 
               <!--Accordion flush-->
@@ -386,7 +404,7 @@
               data-bs-parent="#accordionFlushExample3"
             >
               <div class="accordion-body">
-                Este mes has completado {{ estadistica_mensual }} hábitos, ¡bien hecho!
+                Este mes has completado **** hábitos, ¡bien hecho!
               </div>
             </div>
           </div>
