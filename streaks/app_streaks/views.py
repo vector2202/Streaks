@@ -77,7 +77,7 @@ def create_habit(request):
         name = request.POST.get("name")
         frequency = request.POST.get("frequency")
         category = request.POST.get("category").lower()
-        goal = int(request.POST.get("goal"))
+        goal = request.POST.get("goal")
         form = HabitForm(request.POST)
         days = request.POST.getlist("dias[]")
         day_map = {
@@ -91,12 +91,14 @@ def create_habit(request):
         }
         if frequency == 'daily' and len(days) < 7:
             for day in days:
+                print(day)
                 day_index = day_map[day]
-                #print("Day index", day_index)
+                print("Day index", day_index)
                 today = timezone.now()
                 next_day = today + timedelta(days=(day_index - today.weekday()) % 7)
-                #print(next_day)
-                Habit.objects.create(
+                print(next_day)
+  
+                reminder_habit =  Habit.objects.create(
                     name=name,
                     frequency='weekly',
                     user=request.user,
@@ -105,6 +107,8 @@ def create_habit(request):
                     original_goal=goal,
                     creation_date=next_day
                 )
+                print(f"Recordatorio semanal creado: {reminder_habit}")
+            return redirect('home')
         elif form.is_valid():
             Habit.objects.create(
                 name=name,
