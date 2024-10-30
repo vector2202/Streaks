@@ -590,7 +590,8 @@
         </div>
 
         <div class="mb-3">
-          <button type="submit" class="btn btn-success">
+          <button type="submit" class="btn btn-success"
+		 
             Visualizar
           </button>
         </div>
@@ -606,16 +607,16 @@
           </div>
           <script>
             const ctx_t = document.getElementById(`grafica_total`).getContext('2d');
-            
+            const percentage_f = {{ estadistica_filtrada }};
             
             new Chart(ctx_t, {
               type: 'doughnut',
               data: {
                 datasets: [{
-                  data: [percentage_m, 100 - percentage_m],
+                  data: [percentage_f, 100 - percentage_f],
                 backgroundColor: [
-                  percentage_s > 70 ? 'rgba(51, 97, 255)' :
-                    (percentage_s > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
+                  percentage_f > 70 ? 'rgba(51, 97, 255)' :
+                    (percentage_f > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
                   'rgba(211, 211, 211, 0.3)'
                 ],
                 borderWidth: 2,

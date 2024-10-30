@@ -148,8 +148,9 @@ def calculate_next_date(start_date, day):
     return next_date
 @login_required
 def get_habits_stats(request):
-    start_date = request.GET.get('fecha_inicio')
-    end_date = request.GET.get('fecha_fin')
+    print("hello")
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
     category = request.GET.get('categoria')
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
@@ -158,10 +159,8 @@ def get_habits_stats(request):
     else:    
         habits = Habit.objects.filter(user=request.user, creation_date__gte=start_date, creation_date__lte=end_date)
     porcentaje = calcular_porcentaje_habitos(habits)
-    context = {
-        'porcentaje': porcentaje
-    }
-    return render(request, 'resume/Resumen.html', context)
+    return JsonResponse({'estadistica_filtrada': porcentaje})
+
 @login_required
 def view_habits(request):
     habits = Habit.objects.filter(user=request.user)
