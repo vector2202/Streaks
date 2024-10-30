@@ -16,6 +16,7 @@
       href="https://fonts.googleapis.com/css2?family=Afacad+Flux:wght@100..1000&display=swap"
       rel="stylesheet"
     />
+    <script src="script.js"></script>
   </head>
 
   <!-- Barra de navegación -->
@@ -57,24 +58,34 @@
   </svg>
     </button>
     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="perfilDropdown">
-      <li>
-        <!-- Botón de notificaciones dentro del dropdown -->
-        <button type="button" class="dropdown-item">
-          Notificaciones
-          <span
-            class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
-          >
-            <span class="visually-hidden">New alerts</span>
-          </span>
-        </button>
-      </li>
-      <li><hr class="dropdown-divider" /></li>
-      <li>
         <!-- Botón de cerrar sesión dentro del dropdown-->
         <a class="dropdown-item" href="{% url 'logout' %}">Cerrar sesión</a>
       </li>
     </ul>
   </div>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="notificacionesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+     <button type="button" class="btn btn-primary position-relative mx-2">
+       Notificaciones
+         <span class="visually-hidden">New alerts</span>
+       </span>
+     </button>
+        {% if notificaciones_no_leidas > 0 %}
+            <span class="badge bg-danger">{{ notificaciones_no_leidas }}</span>
+        {% endif %}
+      >  
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificacionesDropdown">
+        {% if notificaciones %}
+            {% for notificacion in notificaciones %}
+                <li><a class="dropdown-item" href="#">{{ notificacion.mensaje }}</a></li>
+            {% endfor %}
+        {% else %}
+            <li><a class="dropdown-item" href="#">No tienes notificaciones</a></li>
+        {% endif %}
+    </ul>
+</li>
 
           <!-- Botón de ayuda con ícono de pregunta, al darle click, se arroja un modal -->
           <button
