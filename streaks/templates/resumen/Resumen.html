@@ -541,21 +541,73 @@
     </div>
 
     <!-- Sección de Estadísticas, para la barra de navegación -->
-    <div id="estadisticas" class="container mt-5 d-none">
-       <h2 class="text-center">Progreso de Hábitos</h2>
-       <div class="chart-container row" id="estadistica_total">
-      <div class="chart-item">
-        <canvas id="grafica_total" width="200" height="200"></canvas>
-      </div>
-      <script>
-        const ctx_t = document.getElementById(`grafica_total`).getContext('2d');
-        
+    <div id="estadisticas" class="container mt-5 d-none row">
+      <h2 class="text-center">Progreso de Hábitos</h2>
+      <div class="col">
+        <input type="hidden" id="id_category" name="category value="">
+        <div class="mb-3">
+          <label for="start_date" class="form-label">Categoría</label>
+          <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownCategory" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              Selecciona la categoria
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownFrecuencia">
+              <li>
+                <a class="dropdown-item" href="#" name="category" value="salud">
+                  Salud </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" name="category" value="deporte">
+                  Deporte </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" name="category" value="trabajo">
+                  Trabajo </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" name="category" value="personal">
+                  Personal </a>
+              </li>
+            </ul>
+          </div>
+        </div>
 
-          new Chart(ctx_t, {
-            type: 'doughnut',
-            data: {
-              datasets: [{
-                data: [percentage_m, 100 - percentage_m],
+        <div class="mb-3">
+          <label for="start_date class="form-label">Fecha de Inicio</label>
+          <input type="date" class="form-control" id="start_date" name="start_date"
+            placeholder="Fecha de inicio" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="end_date class=" form-label">Fecha de Fin</label>
+          <input type="date" class="form-control" id="end_date" name="end_date"
+                    placeholder=" Fecha de fin" required />
+        </div>
+
+        <div class="mb-3">
+          <button type="submit" class="btn btn-success">
+            Visualizar
+          </button>
+        </div>
+      </div>
+        
+        <!--  -->
+        
+        
+        <div class="chart-container col" id="estadistica_total">
+          <div class="chart-item">
+            <canvas id="grafica_total" width="200" height="200"></canvas>
+          </div>
+          <script>
+            const ctx_t = document.getElementById(`grafica_total`).getContext('2d');
+            
+            
+            new Chart(ctx_t, {
+              type: 'doughnut',
+              data: {
+                datasets: [{
+                  data: [percentage_m, 100 - percentage_m],
                 backgroundColor: [
                   percentage_s > 70 ? 'rgba(51, 97, 255)' :
                     (percentage_s > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
@@ -583,8 +635,9 @@
             }
           });
 
-      </script>
+          </script>
        </div>
+      </div>
        
     </div>
 
