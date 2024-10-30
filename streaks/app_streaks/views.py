@@ -149,7 +149,7 @@ def get_habits_stats(request):
     end_date = request.GET.get('fecha_fin')
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-    habits = Habit.objects.filter(user=request.user, date__gte=start_date, date__lte=end_date)
+    habits = Habit.objects.filter(user=request.user, creation_date__gte=start_date, creation_date__lte=end_date)
     porcentaje = calcular_porcentaje_habitos(habits)
     context = {
         'porcentaje': porcentaje
