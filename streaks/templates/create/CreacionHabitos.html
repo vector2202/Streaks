@@ -96,7 +96,7 @@
     <div class="container w-75">
       <h2>Crear un Nuevo Hábito</h2>
       <form method="POST" action="{% url 'create_habit' %}" id="habit-form">
-        {% csrf_token %} {{ form.as_p }}
+        {% csrf_token %}
         <!-- Nombre del hábito -->
         <div class="mb-3">
           <label for="nombre-habito" class="form-label">Nombre</label>
@@ -111,6 +111,7 @@
         </div>
 
         <!-- Frecuencia del hábito -->
+	<input type="hidden" id="id_frequency" name="frequency" value="">
         <div class="mb-3">
           <label for="frecuencia-habito" class="form-label">Frecuencia</label>
           <div class="dropdown">
@@ -129,6 +130,8 @@
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarFrecuencia('diaria')"
+		  name="frequency"
+		  value="daria"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -153,6 +156,8 @@
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarFrecuencia('semanal')"
+		  name="frequency"
+		  value="semanal"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -177,6 +182,8 @@
                   class="dropdown-item"
                   href="#"
                   onclick="seleccionarFrecuencia('mensual')"
+		  name="frequency"
+		  value="mensual"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -205,6 +212,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-lunes"
+		  name="dias[]"
+		  value="lunes"
                 />
                 <label class="form-check-label" for="dia-lunes">Lunes</label>
               </div>
@@ -214,6 +223,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-martes"
+		  name="dias[]"
+		  value="martes"
                 />
                 <label class="form-check-label" for="dia-martes">Martes</label>
               </div>
@@ -223,6 +234,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-miercoles"
+		  name="dias[]"
+		  value="miercoles"
                 />
                 <label class="form-check-label" for="dia-miercoles"
                   >Miercoles</label
@@ -234,6 +247,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-jueves"
+		  name="dias[]"
+		  value="jueves"
                 />
                 <label class="form-check-label" for="dia-jueves">Jueves</label>
               </div>
@@ -243,6 +258,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-viernes"
+		  name="dias[]"
+		  value="viernes"
                 />
                 <label class="form-check-label" for="dia-viernes"
                   >Viernes</label
@@ -254,6 +271,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-sabado"
+		  name="dias[]"
+		  value="sabado"
                 />
                 <label class="form-check-label" for="dia-sabado">Sabado</label>
               </div>
@@ -263,6 +282,8 @@
                   type="checkbox"
                   role="switch"
                   id="dia-domingo"
+		  name="dias[]"
+		  value="domingo"
                 />
                 <label class="form-check-label" for="dia-domingo"
                   >Domingo</label
@@ -384,7 +405,7 @@
                 </a>
               </li>
             </ul>
-            <input type="hidden" name="categoria" id="categoria-habito" />
+            <input type="hidden" name="category" id="categoria-habito" />
           </div>
         </div>
 
@@ -525,7 +546,7 @@
           <input
             type="number"
             class="form-control"
-            name="objetivo_habito"
+            name="goal"
             id="objetivo-habito"
             min="1"
             step="1"
@@ -583,9 +604,11 @@
 
     <script>
       function seleccionarFrecuencia(frecuencia) {
-        document.getElementById("dropdownFrecuencia").textContent =
-          frecuencia.charAt(0).toUpperCase() + frecuencia.slice(1);
-        cambiarTitulo(frecuencia);
+          document.getElementById("dropdownFrecuencia").textContent =
+              frecuencia.charAt(0).toUpperCase() + frecuencia.slice(1);
+	  
+          cambiarTitulo(frecuencia);
+	  
       }
 
       function seleccionarCategoria(categoria) {
@@ -593,20 +616,23 @@
       }
 
       function cambiarTitulo(frecuencia) {
-        var titulo = document.getElementById("titulo-objetivo");
+          var titulo = document.getElementById("titulo-objetivo");
 
         if (frecuencia == "diaria") {
           titulo.textContent =
             "Número de veces al día que te notificaremos sobre tu hábito";
-          document.getElementById("dias-semana").style.display = "block";
+            document.getElementById("dias-semana").style.display = "block";
+	    document.getElementById("id_frequency").value = "daily";
         } else if (frecuencia == "semanal") {
           titulo.textContent =
             "Número de veces a la semana que te notificaremos sobre tu hábito";
-          document.getElementById("dias-semana").style.display = "none";
+            document.getElementById("dias-semana").style.display = "none";
+	    document.getElementById("id_frequency").value = "weekly";
         } else if (frecuencia == "mensual") {
           titulo.textContent =
             "Número de veces al mes que te notificaremos sobre tu hábito";
-          document.getElementById("dias-semana").style.display = "none";
+            document.getElementById("dias-semana").style.display = "none";
+	    document.getElementById("id_frequency").value = "monthly";
         }
       }
     </script>
@@ -622,19 +648,23 @@
         if (categoria === "Salud") {
           var toastEl = document.getElementById("toastSalud");
           var toast = new bootstrap.Toast(toastEl);
-          toast.show();
+            toast.show();
+	    document.getElementById("categoria-habito").value = "salud";
         } else if (categoria === "Deporte") {
           var toastEl = document.getElementById("toastDeporte");
           var toast = new bootstrap.Toast(toastEl);
-          toast.show();
+            toast.show();
+	    document.getElementById("categoria-habito").value = "deporte";
         } else if (categoria === "Trabajo") {
           var toastEl = document.getElementById("toastTrabajo");
           var toast = new bootstrap.Toast(toastEl);
-          toast.show();
+            toast.show();
+	    document.getElementById("categoria-habito").value = "trabajo";
         } else if (categoria === "Personal") {
           var toastEl = document.getElementById("toastPersonal");
           var toast = new bootstrap.Toast(toastEl);
-          toast.show();
+            toast.show();
+	    document.getElementById("categoria-habito").value = "personal";
         }
       }
     </script>

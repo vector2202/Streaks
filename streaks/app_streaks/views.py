@@ -7,8 +7,10 @@ from django.contrib.auth import authenticate,login, logout
 from .forms import HabitForm
 from .models import Habit, HabitCompletion, Notificacion, PreferenciasNotificacion
 from django.db.models import Count
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from django.core.paginator import Paginator
+from django.utils import timezone
+
 from django.views import View
 import json
 from datetime import datetime
@@ -37,15 +39,12 @@ def home(request):
         habit__in = habits,
         date = today
     ).values_list('habit_id', flat=True)
-    print(completed_today)
-    print(habits)
     pendings = []
     start_of_week = today - timedelta(days=today.weekday())
     start_of_month = today.replace(day=1)
     for habit in habits:
         if habit.frequency == 'daily':
             completado = HabitCompletion.objects.filter(habit_id=habit.id, date=today).exists()
-            print(completado)
             if not completado:
                 pendings.append(habit)
         elif habit.frequency == 'weekly':
@@ -57,14 +56,11 @@ def home(request):
             completado = HabitCompletion.objects.filter(habit_id=habit.id, date__gte=start_of_month, date__lte=today).exists()
             if not completado:
                 pendings.append(habit)
-    print(pendings)
     habits_completed_today = habits.filter(id__in=completed_today)
     user_name = request.user
-    print(Habit.objects.filter(user=user_name, creation_date__date=today))
     sts_daily = calcular_porcentaje_habitos(Habit.objects.filter(user=user_name, creation_date__date=today))
     sts_weekly = calcular_porcentaje_habitos(Habit.objects.filter(user=user_name, creation_date__date__gte=start_of_week, creation_date__date__lte=today))
     sts_monthly = calcular_porcentaje_habitos(Habit.objects.filter(user=user_name, creation_date__date__gte=start_of_month, creation_date__date__lte=today))
-    print(sts_daily, sts_weekly, sts_monthly)
     context = {
         'pendientes': pendings,
         'completados_hoy': habits_completed_today,
@@ -80,11 +76,36 @@ def create_habit(request):
     if request.method == 'POST':
         name = request.POST.get("name")
         frequency = request.POST.get("frequency")
-        category = request.POST.get("category")
-        goal = request.POST.get("goal")
+        category = request.POST.get("category").lower()
+        goal = int(request.POST.get("goal"))
         form = HabitForm(request.POST)
-        print(form)
-        if form.is_valid():
+        days = request.POST.getlist("dias[]")
+        day_map = {
+            'lunes': 0,
+            'martes': 1,
+            'miercoles': 2,
+            'jueves': 3,
+            'viernes': 4,
+            'sabado': 5,
+            'domingo': 6
+        }
+        if frequency == 'daily' and len(days) < 7:
+            for day in days:
+                day_index = day_map[day]
+                #print("Day index", day_index)
+                today = timezone.now()
+                next_day = today + timedelta(days=(day_index - today.weekday()) % 7)
+                #print(next_day)
+                Habit.objects.create(
+                    name=name,
+                    frequency='weekly',
+                    user=request.user,
+                    category=category,
+                    goal=goal,
+                    original_goal=goal,
+                    creation_date=next_day
+                )
+        elif form.is_valid():
             Habit.objects.create(
                 name=name,
                 frequency=frequency,
@@ -95,6 +116,8 @@ def create_habit(request):
                 creation_date=timezone.now()
             )
             return redirect('home')
+        else:
+            print(form.errors)
     else:
         form = HabitForm()
 
@@ -216,8 +239,6 @@ def complete_habit(request, habit_id):
             next_date = next_date.replace(day=1)  # Ajusta al primer día del próximo mes
         else:
             next_date = None
-        print("Next date")
-        print(next_date)
         # Crea una nueva instancia de Habit para el próximo período
         if next_date:
             Habit.objects.create(
@@ -234,7 +255,6 @@ def complete_habit(request, habit_id):
 
 def decrement_goal(request, habit_id):
     if request.method == 'POST':
-        print("decrement goal")
         try:
             habit = Habit.objects.get(id=habit_id)
             if habit.goal > 0:

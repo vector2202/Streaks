@@ -25,7 +25,7 @@ class Habit(models.Model):
         creation_date = models.DateTimeField(blank=True, null=False)
 
         def __str__(self):
-            return f'{self.name}, date:{self.creation_date}'
+            return f'{self.name}, date:{self.creation_date}, freq: {self.frequency}'
         
         
 class HabitCompletion(models.Model):
