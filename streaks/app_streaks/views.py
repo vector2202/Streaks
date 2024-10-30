@@ -10,7 +10,6 @@ from django.db.models import Count
 from datetime import datetime, timedelta
 from django.core.paginator import Paginator
 from django.utils import timezone
-
 from django.views import View
 import json
 from datetime import datetime
@@ -151,9 +150,13 @@ def calculate_next_date(start_date, day):
 def get_habits_stats(request):
     start_date = request.GET.get('fecha_inicio')
     end_date = request.GET.get('fecha_fin')
+    category = request.GET.get('categoria')
     start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
     end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-    habits = Habit.objects.filter(user=request.user, creation_date__gte=start_date, creation_date__lte=end_date)
+    if category:
+        habits = Habit.objects.filter(user=request.user, creation_date__gte=start_date, creation_date__lte=end_date, category=category)
+    else:    
+        habits = Habit.objects.filter(user=request.user, creation_date__gte=start_date, creation_date__lte=end_date)
     porcentaje = calcular_porcentaje_habitos(habits)
     context = {
         'porcentaje': porcentaje

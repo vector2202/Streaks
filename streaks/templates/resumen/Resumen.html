@@ -220,7 +220,9 @@
         <!-- Muestra un mensaje personalizado dependiendo de la categoría que el usuario escogió previamente en CreacionHabitos-->
               <div class="list-group">
                 {% for habit in pendientes %}
-                <a href="#" class="list-group-item list-group-item-action active">
+                <a href="#" class="list-group-item list-group-item-action active"
+		   data-creation-date="{{ habit.creation_date|date:'Y-m-d' }}" 
+		   data-frequency="{{ habit.frequency }}">
                   <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">{{ habit.name }}</h5>
                     <small class="text-body-secondary">Faltan {{ habit.goal }} repeticiones.</small>
@@ -239,6 +241,7 @@
                     {% endif %}
                   </p>
                   <small class="text-body-secondary">{{ habit.category }}</small>
+		  <small class="text-body-secondary deadline"></small>
                 </a>
                 {% empty %}
                 <p>No hay hábitos pendientes.</p>
@@ -541,10 +544,11 @@
     </div>
 
     <!-- Sección de Estadísticas, para la barra de navegación -->
+    <form action="{% url 'get_habits_stats' %}" method="get">
     <div id="estadisticas" class="container mt-5 d-none row">
       <h2 class="text-center">Progreso de Hábitos</h2>
       <div class="col">
-        <input type="hidden" id="id_category" name="category value="">
+        <input type="hidden" id="id_category" name="categoria">
         <div class="mb-3">
           <label for="start_date" class="form-label">Categoría</label>
           <div class="dropdown">
@@ -574,13 +578,13 @@
         </div>
 
         <div class="mb-3">
-          <label for="start_date class="form-label">Fecha de Inicio</label>
+          <label for="start_date" class="form-label">Fecha de Inicio</label>
           <input type="date" class="form-control" id="start_date" name="start_date"
             placeholder="Fecha de inicio" required />
         </div>
 
         <div class="mb-3">
-          <label for="end_date class=" form-label">Fecha de Fin</label>
+          <label for="end_date" class="form-label">Fecha de Fin</label>
           <input type="date" class="form-control" id="end_date" name="end_date"
                     placeholder=" Fecha de fin" required />
         </div>
@@ -591,7 +595,8 @@
           </button>
         </div>
       </div>
-        
+      
+    </form> 
         <!--  -->
         
         
@@ -679,6 +684,37 @@
               }
 	  }
       }
+      document.addEventListener('DOMContentLoaded', function() {
+	  document.querySelectorAll('.list-group-item').forEach(function(habitElement) {
+              // Obtiene la fecha de creación y la frecuencia del hábito
+              const creationDateStr = habitElement.getAttribute('data-creation-date');
+              const frequency = habitElement.getAttribute('data-frequency');
+              let deadline;
+
+              // Crea un objeto Date a partir de la fecha de creación
+              const creationDate = new Date(`${creationDateStr}T00:00:00`);
+              
+              if (isNaN(creationDate)) {
+		  console.error(`Invalid creation date: ${creationDateStr}`);
+		  return;
+              }
+
+              // Calcula la fecha límite según la frecuencia
+              if (frequency === 'daily') {
+		  deadline = new Date(creationDate);
+		  deadline.setDate(creationDate.getDate() + 1); // Daily: +1 día
+              } else if (frequency === 'weekly') {
+		  deadline = new Date(creationDate);
+		  deadline.setDate(creationDate.getDate() + 7); // Weekly: +7 días
+              } else if (frequency === 'monthly') {
+		  deadline = new Date(creationDate);
+		  deadline.setMonth(creationDate.getMonth() + 1); // Monthly: +1 mes
+              }
+
+              // Inserta la fecha límite en el `small` con clase `deadline`
+              habitElement.querySelector('.deadline').textContent = `Fecha Límite: ${deadline.toISOString().split('T')[0]}`;
+	  });
+      });
 
     </script>
 
