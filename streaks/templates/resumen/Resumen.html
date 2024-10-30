@@ -17,6 +17,7 @@
       rel="stylesheet"
     />
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
 
   <!-- Barra de navegación -->
@@ -173,7 +174,7 @@
         <div class="seleccion col-md-6 mb-3">
           <div class="card">
             <div class="card-body">
-              <h4 class="card-title">Hábitos completados</h4>
+              <h4 class="card-title">Hábitos por completar</h4>
               <h6 class="card-title">
                 Selecciona los hábitos que has completado y marcalos todas las veces
               </h6>
@@ -247,8 +248,134 @@
           </div>
         </div>
       </div>
-    </div>
+      <div class="chart-container row" id="estadisticas_d_s_m">
+        <div class="chart-item col">
+          <canvas id="grafica_diaria" width="150" height="150"></canvas>
+          <p> Habitos Diarios </p>
+        </div>
+        <script>
+          const ctx_d = document.getElementById(`grafica_diaria`).getContext('2d');
+          const percentage_d = {{ estadistica_diaria }};
 
+          new Chart(ctx_d, {
+            type: 'doughnut',
+            data: {
+              datasets: [{
+                data: [percentage_d, 100 - percentage_d],
+                backgroundColor: [
+                  percentage_d > 70 ? 'rgba(51, 97, 255)' :
+                    (percentage_d > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
+                  'rgba(211, 211, 211, 0.3)'
+                ],
+                borderWidth: 2,
+                cutout: '80%' // Ajusta el tamaño del centro vacío
+              }]
+            },
+            options: {
+              responsive: false,
+              plugins: {
+                tooltip: { enabled: false },
+                legend: { display: false },
+                // Etiqueta en el centro de la gráfica
+                datalabels: {
+                  display: true,
+                  formatter: (value, context) => {
+                    return context.chart.data.datasets[0].data[0] + '%';
+                  },
+                  color: '#000',
+                  font: { size: 20, weight: 'bold' }
+                }
+              }
+            }
+          });
+
+        </script>
+        <div class="chart-item col">
+          <canvas id="grafica_semanal" width="150" height="150"></canvas>
+          <p> Habitos Semanales </p>
+        </div>
+        <script>
+          const ctx_s = document.getElementById(`grafica_semanal`).getContext('2d');
+          const percentage_s = {{ estadistica_semanal }};
+
+          new Chart(ctx_s, {
+            type: 'doughnut',
+            data: {
+              datasets: [{
+                data: [percentage_s, 100 - percentage_s],
+                backgroundColor: [
+                  percentage_s > 70 ? 'rgba(51, 97, 255)' :
+                    (percentage_s > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
+                  'rgba(211, 211, 211, 0.3)'
+                ],
+                borderWidth: 2,
+                cutout: '80%' // Ajusta el tamaño del centro vacío
+              }]
+            },
+            options: {
+              responsive: false,
+              plugins: {
+                tooltip: { enabled: false },
+                legend: { display: false },
+                // Etiqueta en el centro de la gráfica
+                datalabels: {
+                  display: true,
+                  formatter: (value, context) => {
+                    return context.chart.data.datasets[0].data[0] + '%';
+                  },
+                  color: '#000',
+                  font: { size: 20, weight: 'bold' }
+                }
+              }
+            }
+          });
+
+        </script>
+        <div class="chart-item col">
+          <canvas id="grafica_mensual" width="150" height="150"></canvas>
+          <p> Habitos Mensuales </p>
+        </div>
+        <script>
+          const ctx_m = document.getElementById(`grafica_mensual`).getContext('2d');
+          const percentage_m = {{ estadistica_mensual }};
+
+          new Chart(ctx_m, {
+            type: 'doughnut',
+            data: {
+              datasets: [{
+                data: [percentage_m, 100 - percentage_m],
+                backgroundColor: [
+                  percentage_s > 70 ? 'rgba(51, 97, 255)' :
+                    (percentage_s > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
+                  'rgba(211, 211, 211, 0.3)'
+                ],
+                borderWidth: 2,
+                cutout: '80%' // Ajusta el tamaño del centro vacío
+              }]
+            },
+            options: {
+              responsive: false,
+              plugins: {
+                tooltip: { enabled: false },
+                legend: { display: false },
+                // Etiqueta en el centro de la gráfica
+                datalabels: {
+                  display: true,
+                  formatter: (value, context) => {
+                    return context.chart.data.datasets[0].data[0] + '%';
+                  },
+                  color: '#000',
+                  font: { size: 20, weight: 'bold' }
+                }
+              }
+            }
+          });
+
+        </script>
+      </div>
+      
+    </div>
+    
     <!-- Parte de abajo: Progreso diario, semanal y mensual en estilo accordion alineado en columnas -->
     <div class="row">
       <!-- Sección de Progreso diario -->
@@ -410,11 +537,55 @@
           </div>
         </div>
       </div>
+      
     </div>
 
     <!-- Sección de Estadísticas, para la barra de navegación -->
     <div id="estadisticas" class="container mt-5 d-none">
-      <h2 class="text-center">Aquí van los gráficos</h2>
+       <h2 class="text-center">Progreso de Hábitos</h2>
+       <div class="chart-container row" id="estadistica_total">
+      <div class="chart-item">
+        <canvas id="grafica_total" width="200" height="200"></canvas>
+      </div>
+      <script>
+        const ctx_t = document.getElementById(`grafica_total`).getContext('2d');
+        
+
+          new Chart(ctx_t, {
+            type: 'doughnut',
+            data: {
+              datasets: [{
+                data: [percentage_m, 100 - percentage_m],
+                backgroundColor: [
+                  percentage_s > 70 ? 'rgba(51, 97, 255)' :
+                    (percentage_s > 30 ? 'rgba(51, 221, 255, 1)' : 'rgba(50, 250, 180, 1)'),
+                  'rgba(211, 211, 211, 0.3)'
+                ],
+                borderWidth: 2,
+                cutout: '80%' // Ajusta el tamaño del centro vacío
+              }]
+            },
+            options: {
+              responsive: false,
+              plugins: {
+                tooltip: { enabled: false },
+                legend: { display: false },
+                // Etiqueta en el centro de la gráfica
+                datalabels: {
+                  display: true,
+                  formatter: (value, context) => {
+                    return context.chart.data.datasets[0].data[0] + '%';
+                  },
+                  color: '#000',
+                  font: { size: 20, weight: 'bold' }
+                }
+              }
+            }
+          });
+
+      </script>
+       </div>
+       
     </div>
 
     <!-- Para mostrar la pantalla correspondiente a la selección hecha mediante los botones de la barra de navegación-->

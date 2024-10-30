@@ -47,3 +47,27 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+.chart-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.chart-item {
+  width: 150px;
+  margin: 5px;
+  text-align: center;
+  justify-content: center;
+}
+
+.chart-item canvas {
+  margin: 0 auto;
+}
+
+.chart-container {
+  display: flex;
+  justify-content:center;
+  align-items: center;
+  flex-wrap: wrap;
+}
